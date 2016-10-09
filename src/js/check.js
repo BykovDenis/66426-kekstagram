@@ -1,3 +1,5 @@
+"use strict";
+
 var getMessage = function(a, b){
 	if(typeof a === "boolean"){
 		if(a){
@@ -27,6 +29,6 @@ var getMessage = function(a, b){
 		return "Количество красных точек во всех строчках изображения: "+amountOfRedPoints;
 	}
 
-	return "Переданы некорректные данные";   
+	return "Переданы некорректные данные";
 
 }
