@@ -89,14 +89,14 @@
       // чего-либо с другой обводкой.
 
       // Толщина линии.
-      this._ctx.lineWidth = 6;
+      //this._ctx.lineWidth = 6;
       // Цвет обводки.
-      this._ctx.strokeStyle = '#ffe753';
+      //this._ctx.strokeStyle = '#ffe753';
       // Размер штрихов. Первый элемент массива задает длину штриха, второй
       // расстояние между соседними штрихами.
-      this._ctx.setLineDash([15, 10]);
+      //this._ctx.setLineDash([15, 10]);
       // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
+      //this._ctx.lineDashOffset = 7;
 
       // Сохранение состояния канваса.
       this._ctx.save();
@@ -113,11 +113,54 @@
 
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
+      /*
       this._ctx.strokeRect(
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2);
+      */
+
+      var x1 = this._container.width / 2;
+      var y1 = this._container.height / 2;
+      var subSide = this._resizeConstraint.side / 2;
+      var x3 = -(subSide + this._ctx.lineWidth);
+      var y3 = -(subSide + this._ctx.lineWidth);
+      var x4 = subSide - this._ctx.lineWidth;
+      var y4 = subSide - this._ctx.lineWidth;
+
+      //Рисование прямоугольника-контура точками
+      //Радиус точек
+      var radius = 5;
+      // Цвет точек
+      this._ctx.fillStyle = '#ffe753';
+      // Расстояние между точками
+      var stepPoint = 15;
+      var i = x3;
+      while(i < x4 - radius){
+        //верхняя горизонтальная линия
+        this._ctx.beginPath();
+        this._ctx.arc(i+radius, y3+radius, radius, 0, Math.PI * 2, true);
+        this._ctx.fill();
+        //Нижняя горизонтальная линия
+        this._ctx.beginPath();
+        this._ctx.arc(i+radius, y4-radius, radius, 0, Math.PI * 2, true);
+        this._ctx.fill();
+        //Левая вертикальная линия
+        this._ctx.beginPath();
+        this._ctx.arc(x3+radius, i+radius, radius, 0, Math.PI * 2, true);
+        this._ctx.fill();
+        //правая вертикальная линия
+        this._ctx.beginPath();
+        this._ctx.arc(x4-radius, i+radius, radius, 0, Math.PI * 2, true);
+        this._ctx.fill();
+        i += radius + stepPoint;
+      }
+
+      this._ctx.lineWidth = 0;
+      this._ctx.strokeStyle = 'rgba(0,0,0,0)';
+      this._ctx.fillStyle = 'rgba(0,0,0,0)';
+
 
       // Толщина линии.
       this._ctx.lineWidth = 5;
@@ -128,14 +171,6 @@
       this._ctx.setLineDash([0, 0]);
       // Смещение первого штриха от начала линии.
       this._ctx.lineDashOffset = 0;
-
-      var x1 = this._container.width / 2;
-      var y1 = this._container.height / 2;
-      var subSide = this._resizeConstraint.side / 2;
-      var x3 = -(subSide + this._ctx.lineWidth);
-      var y3 = -(subSide + this._ctx.lineWidth);
-      var x4 = subSide - this._ctx.lineWidth;
-      var y4 = subSide - this._ctx.lineWidth;
 
       this._ctx.beginPath();
       this._ctx.moveTo( -x1, -y1 );
@@ -159,7 +194,6 @@
       var text = this._image.naturalWidth + ' x ' + this._image.naturalHeight;
       this._ctx.textAlign = 'center';
       this._ctx.fillText(text, 0, -y1 + 24);
-
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
