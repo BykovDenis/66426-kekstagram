@@ -119,6 +119,48 @@
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2);
 
+      // Толщина линии.
+      this._ctx.lineWidth = 5;
+
+      this._ctx.strokeStyle = 'rgba(0,0,0,.8)';
+      this._ctx.fillStyle = 'rgba(0,0,0,.8)';
+
+      this._ctx.setLineDash([0, 0]);
+      // Смещение первого штриха от начала линии.
+      this._ctx.lineDashOffset = 0;
+
+      var x1 = this._container.width / 2;
+      var y1 = this._container.height / 2;
+      var subSide = this._resizeConstraint.side / 2;
+      var x3 = -(subSide + this._ctx.lineWidth);
+      var y3 = -(subSide + this._ctx.lineWidth);
+      var x4 = subSide - this._ctx.lineWidth;
+      var y4 = subSide - this._ctx.lineWidth;
+
+      this._ctx.beginPath();
+      this._ctx.moveTo( -x1, -y1 );
+      this._ctx.lineTo( x1, -y1 );
+      this._ctx.lineTo( x1, y1 );
+      this._ctx.lineTo( -x1, y1 );
+      this._ctx.lineTo( -x1, -y1 );
+      this._ctx.moveTo( x3, y3 );
+      this._ctx.lineTo( x4, y3 );
+      this._ctx.lineTo( x4, y4 );
+      this._ctx.lineTo( x3, y4 );
+      this._ctx.lineTo( x3, y3 );
+
+      this._ctx.fill('evenodd');
+
+      // Пишем текст
+      this._ctx.fillStyle = '#FFFFFF';
+      this._ctx.strokeStyle = '#FFFFFF';
+
+      this._ctx.font = '14px Arial';
+      var text = this._image.naturalWidth + ' x ' + this._image.naturalHeight;
+      this._ctx.textAlign = 'center';
+      this._ctx.fillText(text, 0, -y1 + 24);
+
+
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
       // следующий кадр рисовался с привычной системой координат, где точка
