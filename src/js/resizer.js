@@ -143,7 +143,7 @@
       this._ctx.lineTo( x1, y1 );
       this._ctx.lineTo( -x1, y1 );
       this._ctx.lineTo( -x1, -y1 );
-      this._ctx.lineTo( x3, y3 );
+      this._ctx.moveTo( x3, y3 );
       this._ctx.lineTo( x4, y3 );
       this._ctx.lineTo( x4, y4 );
       this._ctx.lineTo( x3, y4 );
