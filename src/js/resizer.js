@@ -137,22 +137,22 @@
       // Расстояние между точками
       var stepPoint = 15;
       var i = x3;
-      while(i < x4 - radius){
+      while (i < x4 - radius) {
         //верхняя горизонтальная линия
         this._ctx.beginPath();
-        this._ctx.arc(i+radius, y3+radius, radius, 0, Math.PI * 2, true);
+        this._ctx.arc(i + radius, y3 + radius, radius, 0, Math.PI * 2, true);
         this._ctx.fill();
         //Нижняя горизонтальная линия
         this._ctx.beginPath();
-        this._ctx.arc(i+radius, y4-radius, radius, 0, Math.PI * 2, true);
+        this._ctx.arc(i + radius, y4 - radius, radius, 0, Math.PI * 2, true);
         this._ctx.fill();
         //Левая вертикальная линия
         this._ctx.beginPath();
-        this._ctx.arc(x3+radius, i+radius, radius, 0, Math.PI * 2, true);
+        this._ctx.arc(x3 + radius, i + radius, radius, 0, Math.PI * 2, true);
         this._ctx.fill();
         //правая вертикальная линия
         this._ctx.beginPath();
-        this._ctx.arc(x4-radius, i+radius, radius, 0, Math.PI * 2, true);
+        this._ctx.arc(x4 - radius, i + radius, radius, 0, Math.PI * 2, true);
         this._ctx.fill();
         i += radius + stepPoint;
       }
