@@ -1,6 +1,7 @@
 'use strict';
 
 (function() {
+
   /**
    * @constructor
    * @param {string} image
@@ -77,6 +78,36 @@
     _resizeConstraint: null,
 
     /**
+     * Отрисовка круглый хточек
+     * @param  {number} x      [description]
+     * @param  {number} y      [description]
+     * @param  {number} radius [description]
+     * @return Отрисованная точка
+     */
+    drawLinePointers: function(x, y, radius) {
+      this._ctx.beginPath();
+      this._ctx.arc(x, y, radius, 0, Math.PI * 2, true);
+      this._ctx.fill();
+    },
+
+    /**
+     * Отрисовка точечной рамки
+     * @param  {object} params параметры отрисовка
+     * @return отрисованная вигура
+     */
+    drawBorder: function(params) {
+      this._ctx.fillStyle = params.color;
+      var i = params.startInnerPos;
+      while (i < params.length) {
+        this.drawLinePointers(i, params.startInnerPos, params.radius);
+        this.drawLinePointers(params.startInnerPos, i, params.radius);
+        this.drawLinePointers(i, params.endInnerPos, params.radius);
+        this.drawLinePointers(params.endInnerPos, i, params.radius);
+        i += params.step;
+      }
+    },
+
+    /**
      * Отрисовка канваса.
      */
     redraw: function() {
@@ -87,16 +118,6 @@
       // NB! Такие параметры сохраняются на время всего процесса отрисовки
       // canvas'a поэтому важно вовремя поменять их, если нужно начать отрисовку
       // чего-либо с другой обводкой.
-
-      // Толщина линии.
-      this._ctx.lineWidth = 6;
-      // Цвет обводки.
-      this._ctx.strokeStyle = '#ffe753';
-      // Размер штрихов. Первый элемент массива задает длину штриха, второй
-      // расстояние между соседними штрихами.
-      this._ctx.setLineDash([15, 10]);
-      // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
 
       // Сохранение состояния канваса.
       this._ctx.save();
@@ -111,13 +132,30 @@
       // Координаты задаются от центра холста.
       this._ctx.drawImage(this._image, displX, displY);
 
-      // Отрисовка прямоугольника, обозначающего область изображения после
-      // кадрирования. Координаты задаются от центра.
-      this._ctx.strokeRect(
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);
+      var startOuterPosX = -this._container.width / 2;
+      var startOuterPosY = -this._container.height / 2;
+      var endOuterPosX = this._container.width / 2;
+      var endOuterPosY = this._container.height / 2;
+      var subSide = this._resizeConstraint.side / 2;
+      var startInnerPos = -(subSide + this._ctx.lineWidth);
+      var endInnerPos = subSide - this._ctx.lineWidth;
+      //Рисование прямоугольника-контура точками
+      //Радиус точек
+      var radius = 5;
+      var params = {
+        radius: radius,
+        color: '#ffe753',
+        step: 15,
+        direction: 'horizontal',
+        startInnerPos: startInnerPos + radius,
+        endInnerPos: endInnerPos - radius,
+        length: subSide - this._ctx.lineWidth - radius,
+      };
+      this.drawBorder(params);
+
+      this._ctx.lineWidth = 0;
+      this._ctx.strokeStyle = 'rgba(0,0,0,0)';
+      this._ctx.fillStyle = 'rgba(0,0,0,0)';
 
       // Толщина линии.
       this._ctx.lineWidth = 5;
@@ -129,25 +167,17 @@
       // Смещение первого штриха от начала линии.
       this._ctx.lineDashOffset = 0;
 
-      var x1 = this._container.width / 2;
-      var y1 = this._container.height / 2;
-      var subSide = this._resizeConstraint.side / 2;
-      var x3 = -(subSide + this._ctx.lineWidth);
-      var y3 = -(subSide + this._ctx.lineWidth);
-      var x4 = subSide - this._ctx.lineWidth;
-      var y4 = subSide - this._ctx.lineWidth;
-
       this._ctx.beginPath();
-      this._ctx.moveTo( -x1, -y1 );
-      this._ctx.lineTo( x1, -y1 );
-      this._ctx.lineTo( x1, y1 );
-      this._ctx.lineTo( -x1, y1 );
-      this._ctx.lineTo( -x1, -y1 );
-      this._ctx.moveTo( x3, y3 );
-      this._ctx.lineTo( x4, y3 );
-      this._ctx.lineTo( x4, y4 );
-      this._ctx.lineTo( x3, y4 );
-      this._ctx.lineTo( x3, y3 );
+      this._ctx.moveTo( startOuterPosX, startOuterPosY );
+      this._ctx.lineTo( endOuterPosX, startOuterPosY );
+      this._ctx.lineTo( endOuterPosX, endOuterPosY );
+      this._ctx.lineTo( startOuterPosX, endOuterPosY );
+      this._ctx.lineTo( startOuterPosX, startOuterPosY );
+      this._ctx.moveTo( startInnerPos, startInnerPos );
+      this._ctx.lineTo( endInnerPos, startInnerPos );
+      this._ctx.lineTo( endInnerPos, endInnerPos );
+      this._ctx.lineTo( startInnerPos, endInnerPos );
+      this._ctx.lineTo( startInnerPos, startInnerPos );
 
       this._ctx.fill('evenodd');
 
@@ -158,8 +188,7 @@
       this._ctx.font = '14px Arial';
       var text = this._image.naturalWidth + ' x ' + this._image.naturalHeight;
       this._ctx.textAlign = 'center';
-      this._ctx.fillText(text, 0, -y1 + 24);
-
+      this._ctx.fillText(text, 0, startOuterPosY + 24);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
