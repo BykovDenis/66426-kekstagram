@@ -79,12 +79,12 @@
 
     /**
      * Отрисовка круглый хточек
-     * @param  {number} x      [description]
-     * @param  {number} y      [description]
-     * @param  {number} radius [description]
+     * @param  {number} x      положение точки на оси X
+     * @param  {number} y      положение точки на оси Y
+     * @param  {number} radius радиус окружности
      * @return Отрисованная точка
      */
-    drawLinePointers: function(x, y, radius) {
+    drawLinePointers: function(x, y, radius, size) {
       this._ctx.beginPath();
       this._ctx.arc(x, y, radius, 0, Math.PI * 2, true);
       this._ctx.fill();
@@ -95,8 +95,9 @@
      * @param  {object} params параметры отрисовка
      * @return отрисованная вигура
      */
-    drawBorder: function(params) {
+    drawBorderPointers: function(params) {
       this._ctx.fillStyle = params.color;
+      this._ctx.lineWidth = params.lineWidth;
       var i = params.startInnerPos;
       while (i < params.length) {
         this.drawLinePointers(i, params.startInnerPos, params.radius);
@@ -105,6 +106,42 @@
         this.drawLinePointers(params.endInnerPos, i, params.radius);
         i += params.step;
       }
+    },
+
+    /**
+     * Отрисовка зигзагов
+     * @param  {[type]} x     положение точки на оси X
+     * @param  {[type]} y     положение точки на оси Y
+     * @param  {[type]} angle угол наклона
+     * @param  {[type]} size  размер
+     * @return                отрисованная фигура
+     */
+    drawLineZigZag(x, y, angle, size) {
+      this._ctx.beginPath();
+      this._ctx.arc(x, y, radius, 0, Math.PI * 2, true);
+      this._ctx.stroke();
+    },
+
+    drawBorderZigZag(params){
+      this._ctx.strokeStyle = params.color;
+      this._ctx.lineWidth = params.lineWidth;
+      let x = params.startInnerPos;
+      var i = x;
+      const lengthLine = params.step;
+      let y = params.startInnerPos + params.radius;
+      const angle = Math.ceil(Math.sqrt((Math.pow(params.step,2))*2));
+      this._ctx.beginPath();
+      while(i < params.length){
+        x = i;
+        if(!(i % 2)) {
+          this._ctx.lineTo(x, y - angle*0.5);
+        } else {
+          this._ctx.lineTo(x, y);
+        }
+        console.log(x,y);
+        i+=params.step;
+      }
+      this._ctx.stroke();
     },
 
     /**
@@ -145,13 +182,15 @@
       var params = {
         radius: radius,
         color: '#ffe753',
+        lineWidth: 2,
         step: 15,
         direction: 'horizontal',
         startInnerPos: startInnerPos + radius,
         endInnerPos: endInnerPos - radius,
         length: subSide - this._ctx.lineWidth - radius,
       };
-      this.drawBorder(params);
+      //this.drawBorderPointers(params);
+      this.drawBorderZigZag(params);
 
       this._ctx.lineWidth = 0;
       this._ctx.strokeStyle = 'rgba(0,0,0,0)';
