@@ -109,39 +109,107 @@
     },
 
     /**
-     * Отрисовка зигзагов
+     * Отрисовка зигзагов горизонтальных
      * @param  {[type]} x     положение точки на оси X
      * @param  {[type]} y     положение точки на оси Y
      * @param  {[type]} angle угол наклона
      * @param  {[type]} size  размер
      * @return                отрисованная фигура
      */
-    drawLineZigZag(x, y, angle, size) {
+    drawLineZigZagHorizontal: function(x, y, angle, length, step) {
       this._ctx.beginPath();
-      this._ctx.arc(x, y, radius, 0, Math.PI * 2, true);
-      this._ctx.stroke();
-    },
-
-    drawBorderZigZag(params){
-      this._ctx.strokeStyle = params.color;
-      this._ctx.lineWidth = params.lineWidth;
-      let x = params.startInnerPos;
-      var i = x;
-      const lengthLine = params.step;
-      let y = params.startInnerPos + params.radius;
-      const angle = Math.ceil(Math.sqrt((Math.pow(params.step,2))*2));
-      this._ctx.beginPath();
-      while(i < params.length){
-        x = i;
-        if(!(i % 2)) {
-          this._ctx.lineTo(x, y - angle*0.5);
+      while(x < length) {
+        if (!(x % 2)) {
+          this._ctx.lineTo(x, y - angle * 0.5);
         } else {
           this._ctx.lineTo(x, y);
         }
-        console.log(x,y);
-        i+=params.step;
+        x+=step;
       }
       this._ctx.stroke();
+    },
+
+    /**
+     * Отрисовка зигзагов вертикальных
+     * @param  {[type]} x     положение точки на оси X
+     * @param  {[type]} y     положение точки на оси Y
+     * @param  {[type]} angle угол наклона
+     * @param  {[type]} size  размер
+     * @return                отрисованная фигура
+     */
+    drawLineZigZagVertical: function(x, y, angle, length, step) {
+      this._ctx.beginPath();
+      while(y < length) {
+        if (!(y % 2)) {
+          this._ctx.lineTo(x - angle * 0.5, y);
+        } else {
+          this._ctx.lineTo(x, y);
+        }
+        y+=step;
+      }
+      this._ctx.stroke();
+    },
+
+    drawLineZigZag: function(startPos, endPos, angle, length, step){
+      this._ctx.beginPath();
+      var x = startPos;
+      var y = startPos;
+      var k = 1;
+      while(x < length) {
+        if (!(k % 2)) {
+          this._ctx.lineTo(x, startPos - angle * 0.5);
+        } else {
+          this._ctx.lineTo(x, startPos);
+        }
+        x+=step;
+        k++;
+      }
+      this._ctx.lineTo(endPos, startPos);
+      while(y < length - step) {
+        if (!(k % 2)) {
+          this._ctx.lineTo(endPos - angle * 0.5, y);
+        } else {
+          this._ctx.lineTo(endPos, y);
+        }
+        y+=step;
+        k++;
+      }
+      this._ctx.lineTo(endPos, endPos);
+      while(x > startPos - step) {
+        if (!(k % 2)) {
+          this._ctx.lineTo(x, endPos - angle * 0.5);
+        } else {
+          this._ctx.lineTo(x, endPos);
+        }
+        x-=step;
+        k++;
+      }
+      this._ctx.lineTo(startPos, endPos);
+      while(y > startPos - step) {
+        if (!(k % 2)) {
+          this._ctx.lineTo(startPos - angle * 0.5, y);
+        } else {
+          this._ctx.lineTo(startPos, y);
+        }
+        y-=step;
+        k++;
+      }
+      this._ctx.lineTo(startPos, startPos);
+      this._ctx.stroke();
+    },
+
+    drawBorderZigZag: function(params){
+      this._ctx.strokeStyle = params.color;
+      this._ctx.lineWidth = params.lineWidth;
+      var lengthLine = params.step;
+      var angle = Math.ceil(Math.sqrt((Math.pow(params.step,2)) * 2));
+      this.drawLineZigZag(params.startInnerPos, params.endInnerPos, angle, params.length, params.step)
+      /*
+      this.drawLineZigZagHorizontal(params.startInnerPos, params.startInnerPos + params.radius, angle, params.length, params.step);
+      this.drawLineZigZagHorizontal(params.startInnerPos, params.endInnerPos - params.radius, angle, params.length, params.step);
+      this.drawLineZigZagVertical(params.startInnerPos + params.radius, params.startInnerPos, angle, params.length, params.step);
+      this.drawLineZigZagVertical(params.endInnerPos - params.radius, params.startInnerPos, angle, params.length, params.step);
+      */
     },
 
     /**
@@ -182,12 +250,12 @@
       var params = {
         radius: radius,
         color: '#ffe753',
-        lineWidth: 2,
+        lineWidth: 4,
         step: 15,
         direction: 'horizontal',
-        startInnerPos: startInnerPos + radius,
+        startInnerPos: startInnerPos + 2 * radius + 4,
         endInnerPos: endInnerPos - radius,
-        length: subSide - this._ctx.lineWidth - radius,
+        length: subSide,
       };
       //this.drawBorderPointers(params);
       this.drawBorderZigZag(params);
@@ -227,7 +295,7 @@
       this._ctx.font = '14px Arial';
       var text = this._image.naturalWidth + ' x ' + this._image.naturalHeight;
       this._ctx.textAlign = 'center';
-      this._ctx.fillText(text, 0, startOuterPosY + 24);
+      this._ctx.fillText(text, 0, (startOuterPosY + startInnerPos)/2);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
