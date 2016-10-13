@@ -195,7 +195,6 @@
 
     if (resizeFormIsValid()) {
       var image = currentResizer.exportImage().src;
-
       var thumbnails = filterForm.querySelectorAll('.upload-filter-preview');
       for (var i = 0; i < thumbnails.length; i++) {
         thumbnails[i].style.backgroundImage = 'url(' + image + ')';
@@ -260,6 +259,92 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
+
+  /**
+   * Ожидаем загрузку всего DOM дерева на странице
+   * @param  {[type]} ) Event
+   */
+  //document.addEventListener('DOMContentLoaded', function() {
+
+  // Определяем форму для валидации
+  var frmUploadResize = document.getElementById('upload-resize');
+  //Определяем элементы формы
+  // Определяем поля ввода для валидации на форме
+  // Положение кадра слева
+  var partLeft = frmUploadResize.elements.x;
+  // Положение кадра слева
+  var partTop = frmUploadResize.elements.y;
+  //  Размер стороны квадрата который будет вырезан из изображения
+  var sideSize = frmUploadResize.elements.size;
+  // Кнопка отправки данных на сервер
+  var sbmSend = frmUploadResize.elements.fwd;
+
+  // Поля «сверху» и «слева» не могут быть отрицательными.
+  partLeft.min = 0;
+  partTop.min = 0;
+
+  var widthImage;
+  var heightImage;
+
+  /**
+   * Метод валидации элементов формы
+   *
+   */
+  var validateForm = function() {
+
+    if(currentResizer) {
+    // Параметры исходного изображения
+      widthImage = currentResizer._image.naturalWidth;
+      heightImage = currentResizer._image.naturalHeight;
+    }
+
+    //Проверяем заполнены ли поля, преобразуем к числовому виду
+    partLeft.value = Math.abs(parseInt(partLeft.value, 10)) ? parseInt(partLeft.value, 10) : 0;
+    partTop.value = parseInt(partTop.value, 10) ? parseInt(partTop.value, 10) : 0;
+    sideSize.value = parseInt(sideSize.value, 10) ? parseInt(sideSize.value, 10) : 0;
+
+
+    // Сумма значений полей «слева» и «сторона» не должна быть больше ширины исходного изображения.
+    if ((partLeft.value + partTop.value) > widthImage) {
+      sbmSend.disabled = true;
+      console.info('Сумма значений полей «слева» и «сторона» не должна быть больше ширины исходного изображения.');
+    } else if(sbmSend.disabled === true) {
+      sbmSend.disabled = false;
+    }
+    // Сумма значений полей «сверху» и «сторона» не должна быть больше высоты исходного изображения.
+    if ((partTop.value + sideSize.value) > heightImage) {
+      sbmSend.disabled = true;
+      console.info('Сумма значений полей «сверху» и «сторона» не должна быть больше высоты исходного изображения.');
+    } else if(sbmSend.disabled === true) {
+      sbmSend.disabled = false;
+    }
+
+    if (partLeft.validity.rangeUnderflow) {
+      partLeft.setCustomValidity('Введенное значение меньше допустимого. Не должно быть меньше 0');
+    }
+
+    if (partTop.validity.rangeUnderflow) {
+      partTop.setCustomValidity('Введенное значение меньше допустимого. Не должно быть меньше 0');
+    }
+
+
+  };
+
+  validateForm();
+
+  // Навешиваем события DOM level 0 на текстовые поля ввода
+  partLeft.onchange = function() {
+    validateForm();
+  };
+
+  partTop.onchange = function() {
+    validateForm();
+  };
+
+  sideSize.onchange = function() {
+    validateForm();
+  };
+
 
   cleanupResizer();
   updateBackground();
