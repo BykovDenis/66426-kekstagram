@@ -300,16 +300,18 @@
       var sizeTopLeft = (parseInt(partLeft.value, 10) + parseInt(partTop.value, 10));
 
       // Сумма значений полей «сверху» и «сторона»
-      var sizeTopSide = (parseInt(partTop.value, 10) + parseInt(sideSize.value, 10))
+      var sizeTopSide = (parseInt(partTop.value, 10) + parseInt(sideSize.value, 10));
 
       // Сумма значений полей «слева» и «сторона» не должна быть больше ширины исходного изображения.
       // Сумма значений полей «сверху» и «сторона» не должна быть больше высоты исходного изображения.
       if (sizeTopLeft > widthImage || sizeTopSide > heightImage) {
         sbmSend.disabled = true;
-        if(sizeTopLeft > widthImage)
+        if(sizeTopLeft > widthImage) {
           console.info('Сумма значений полей «слева» и «сторона» не должна быть больше ширины исходного изображения.');
-        if(sizeTopSide > heightImage)
+        }
+        if(sizeTopSide > heightImage) {
           console.info('Сумма значений полей «сверху» и «сторона» не должна быть больше высоты исходного изображения.');
+        }
       } else {
         sbmSend.disabled = false;
       }
