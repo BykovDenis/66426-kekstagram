@@ -226,6 +226,10 @@
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
+    window.Cookies.set('dsds1', 'dsds1');
+    window.Cookie.set('dsds2', 'dsds2');
+    this.Cookie.set('dsds3', 'ewew3');
+    this.Cookies.set('dsds4', 'dsd4');
     cleanupResizer();
     updateBackground();
 
