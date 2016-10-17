@@ -222,8 +222,8 @@
    * Количество дней со дня рождения Грейс Хоппер
    * @return {number} [description]
    */
-  var getDaysFromBirthdayGraceHopper = function(){
-    var birthdate = new Date('1906','00','09');
+  var getDaysFromBirthdayGraceHopper = function() {
+    var birthdate = new Date('1906', '00', '09');
     var currentDate = new Date(Date.now());
     var numDayFromBirthdate = convertDateToNumberDay(birthdate);
     var curNumberDayThisYear = convertDateToNumberDay(currentDate);
@@ -232,7 +232,7 @@
       return curNumberDayThisYear - numDayFromBirthdate;
     }
     // Если порядковый номер дня в году меньше 9 то ищем разницу с прошлого года
-    if(currentDate.getFullYear()-1 % 4 === 0) {
+    if(currentDate.getFullYear() - 1 % 4 === 0) {
       // Високосный год
       return (366 - numDayFromBirthdate) + curNumberDayThisYear;
     }
@@ -246,14 +246,14 @@
      * @param  {date} date Дата формата yyyy-mm-dd
      * @return {integer}  Порядковый номер в году
      */
-  var convertDateToNumberDay = function(date){
-        var now = new Date(date);
-        var start = new Date(now.getFullYear(), 0, 0);
-        var diff = now - start;
-        var oneDay = 1000 * 60 * 60 * 24;
-        var day = Math.floor(diff / oneDay);
-        return day;
-    }
+  var convertDateToNumberDay = function(date) {
+    var now = new Date(date);
+    var start = new Date(now.getFullYear(), 0, 0);
+    var diff = now - start;
+    var oneDay = 1000 * 60 * 60 * 24;
+    var day = Math.floor(diff / oneDay);
+    return day;
+  };
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
@@ -263,7 +263,7 @@
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
-    var filter = filterForm.getElementsByTagName('img')[0].className.replace('filter-image-preview ', '') ;
+    var filter = filterForm.getElementsByTagName('img')[0].className.replace('filter-image-preview ', '');
     if(filter) {
       var dayNumber = getDaysFromBirthdayGraceHopper() || 0;
       window.Cookies.set('upload-filter', filter, {expires: dayNumber});
@@ -306,11 +306,11 @@
   var filter = window.Cookies.get('upload-filter');
   if(filter) {
     // Выбираем нужный компонент из кука
-    var input  = document.getElementById('upload-'+filter);
+    var input = document.getElementById('upload-' + filter);
     if(input) {
       input.checked = true;
       // Применяем фильтр
-      filterImage.className = 'filter-image-preview '+ window.Cookies.get('upload-filter');
+      filterImage.className = 'filter-image-preview ' + window.Cookies.get('upload-filter');
     }
   }
 
