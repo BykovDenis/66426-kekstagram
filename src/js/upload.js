@@ -223,7 +223,6 @@
    * @return {number} [description]
    */
   var getDaysFromBirthdayGraceHopper = function() {
-    var birthdate;
     var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     var currentMonth = currentDate.getMonth();
@@ -231,8 +230,8 @@
     var dayBirthdateGrace = 9;
     var monthBirthdayGrace = 0;
     // Если 9 число года значит ищем разницу в днях со дня рождения в текущем году
-    var baseYear = (currentMonth === 0 && currentNumberDayOfMonth < 9 ) ? currentYear - 1 : currentYear;
-    birthdate = new Date(baseYear, monthBirthdayGrace, dayBirthdateGrace);
+    var baseYear = (currentMonth === monthBirthdayGrace && currentNumberDayOfMonth < dayBirthdateGrace) ? currentYear - 1 : currentYear;
+    var birthdate = new Date(baseYear, monthBirthdayGrace, dayBirthdateGrace);
     return Math.ceil((currentDate.valueOf() - birthdate.valueOf()) / (1000 * 60 * 60 * 24));
   };
 
