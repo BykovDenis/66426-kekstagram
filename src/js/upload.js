@@ -224,16 +224,15 @@
    */
   var getDaysFromBirthdayGraceHopper = function() {
     var birthdate;
-    var currentDate = new Date(Date.now());
+    var currentDate = new Date();
     var currentYear = currentDate.getFullYear();
     var currentMonth = currentDate.getMonth();
     var currentNumberDayOfMonth = currentDate.getDate();
+    var dayBirthdateGrace = 9;
+    var monthBirthdayGrace = 0;
     // Если 9 число года значит ищем разницу в днях со дня рождения в текущем году
-    if (currentMonth === 0 && currentNumberDayOfMonth < 9 ) {
-      birthdate = new Date(currentYear - 1, '0', '9');
-    } else {
-      birthdate = new Date(currentYear, '0', '9');
-    }
+    var baseYear = (currentMonth === 0 && currentNumberDayOfMonth < 9 ) ? currentYear - 1 : currentYear;
+    birthdate = new Date(baseYear, monthBirthdayGrace, dayBirthdateGrace);
     return Math.ceil((currentDate.valueOf() - birthdate.valueOf()) / (1000 * 60 * 60 * 24));
   };
 
@@ -293,7 +292,7 @@
     if(input) {
       input.checked = true;
       // Применяем фильтр
-      filterImage.className = 'filter-image-preview ' + window.Cookies.get('upload-filter');
+      filterImage.className = 'filter-image-preview ' + filter;
     }
   }
 
