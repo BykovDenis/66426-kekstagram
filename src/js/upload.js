@@ -219,12 +219,36 @@
   };
 
   /**
+   * Количество дней со дня рождения Грейс Хоппер
+   * @return {number} [description]
+   */
+  var getDaysFromBirthdayGraceHopper = function() {
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentMonth = currentDate.getMonth();
+    var currentNumberDayOfMonth = currentDate.getDate();
+    var dayBirthdateGrace = 9;
+    var monthBirthdayGrace = 0;
+    // Если 9 число года значит ищем разницу в днях со дня рождения в текущем году
+    var baseYear = (currentMonth === monthBirthdayGrace && currentNumberDayOfMonth < dayBirthdateGrace) ? currentYear - 1 : currentYear;
+    var birthdate = new Date(baseYear, monthBirthdayGrace, dayBirthdateGrace);
+    return Math.ceil((currentDate.valueOf() - birthdate.valueOf()) / (1000 * 60 * 60 * 24));
+  };
+
+
+  /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
    * записав сохраненный фильтр в cookie.
    * @param {Event} evt
    */
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
+
+    var filter = filterForm.getElementsByTagName('img')[0].className.replace('filter-image-preview ', '');
+    if(filter) {
+      var dayNumber = getDaysFromBirthdayGraceHopper() || 0;
+      window.Cookies.set('upload-filter', filter, {expires: dayNumber});
+    }
 
     cleanupResizer();
     updateBackground();
@@ -259,6 +283,18 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
+
+  var filter = window.Cookies.get('upload-filter');
+  if(filter) {
+    // Выбираем нужный компонент из кука
+    var input = document.getElementById('upload-' + filter);
+    if(input) {
+      input.checked = true;
+      // Применяем фильтр
+      filterImage.className = 'filter-image-preview ' + filter;
+    }
+  }
+
 
   // Определяем форму для валидации
   var frmUploadResize = document.getElementById('upload-resize');
