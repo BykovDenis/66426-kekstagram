@@ -11,11 +11,11 @@
   var registeredInModuleLoader = false;
   if (typeof define === 'function' && define.amd) {
     define(factory);
-    //registeredInModuleLoader = true;
+    registeredInModuleLoader = true;
   }
   if (typeof exports === 'object') {
     module.exports = factory();
-    //registeredInModuleLoader = true;
+    registeredInModuleLoader = true;
   }
   if (!registeredInModuleLoader) {
     var OldCookies = window.Cookies;
