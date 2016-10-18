@@ -223,37 +223,25 @@
    * @return {number} [description]
    */
   var getDaysFromBirthdayGraceHopper = function() {
-    var birthdate = new Date('1906', '00', '09');
-    var currentDate = new Date(Date.now());
-    var numDayFromBirthdate = convertDateToNumberDay(birthdate);
-    var curNumberDayThisYear = convertDateToNumberDay(currentDate);
+    var birthdate;
+    var currentDate = Date.now();
+    var numMillisecFromBD;
+    var currentYear = new Date(currentDate).getFullYear();
+    var currentMonth = new Date(currentDate).getMonth();
+    var currentNumberDayOfMonth = new Date(currentDate).getDate();
     // Если 9 число года значит ищем разницу в днях со дня рождения в текущем году
-    if(curNumberDayThisYear >= 9) {
-      return curNumberDayThisYear - numDayFromBirthdate;
+    if(currentMonth >= 0 && currentNumberDayOfMonth > 9) {
+      birthdate = new Date(currentYear, '0', '9');
+      numMillisecFromBD = birthdate.valueOf();
+      return Math.ceil((currentDate - numMillisecFromBD) / (1000 * 60 * 60 * 24));
     }
-    // Если порядковый номер дня в году меньше 9 то ищем разницу с прошлого года
-    if(currentDate.getFullYear() - 1 % 4 === 0) {
-      // Високосный год
-      return (366 - numDayFromBirthdate) + curNumberDayThisYear;
-    }
-    // Обычный год
-    return (365 - numDayFromBirthdate) + curNumberDayThisYear;
+
+    birthdate = new Date(currentYear - 1, '0', '9');
+    numMillisecFromBD = birthdate.valueOf();
+    return Math.ceil((currentDate - numMillisecFromBD) / (1000 * 60 * 60 * 24));
 
   };
 
-      /**
-     * Метод определения порядкового номера в году
-     * @param  {date} date Дата формата yyyy-mm-dd
-     * @return {integer}  Порядковый номер в году
-     */
-  var convertDateToNumberDay = function(date) {
-    var now = new Date(date);
-    var start = new Date(now.getFullYear(), 0, 0);
-    var diff = now - start;
-    var oneDay = 1000 * 60 * 60 * 24;
-    var day = Math.floor(diff / oneDay);
-    return day;
-  };
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
