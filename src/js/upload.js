@@ -224,22 +224,17 @@
    */
   var getDaysFromBirthdayGraceHopper = function() {
     var birthdate;
-    var currentDate = Date.now();
-    var numMillisecFromBD;
-    var currentYear = new Date(currentDate).getFullYear();
-    var currentMonth = new Date(currentDate).getMonth();
-    var currentNumberDayOfMonth = new Date(currentDate).getDate();
+    var currentDate = new Date(Date.now());
+    var currentYear = currentDate.getFullYear();
+    var currentMonth = currentDate.getMonth();
+    var currentNumberDayOfMonth = currentDate.getDate();
     // Если 9 число года значит ищем разницу в днях со дня рождения в текущем году
-    if(currentMonth >= 0 && currentNumberDayOfMonth > 9) {
+    if (currentMonth === 0 && currentNumberDayOfMonth < 9 ) {
+      birthdate = new Date(currentYear - 1, '0', '9');
+    } else {
       birthdate = new Date(currentYear, '0', '9');
-      numMillisecFromBD = birthdate.valueOf();
-      return Math.ceil((currentDate - numMillisecFromBD) / (1000 * 60 * 60 * 24));
     }
-
-    birthdate = new Date(currentYear - 1, '0', '9');
-    numMillisecFromBD = birthdate.valueOf();
-    return Math.ceil((currentDate - numMillisecFromBD) / (1000 * 60 * 60 * 24));
-
+    return Math.ceil((currentDate.valueOf() - birthdate.valueOf()) / (1000 * 60 * 60 * 24));
   };
 
 
