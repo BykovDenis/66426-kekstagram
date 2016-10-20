@@ -157,3 +157,5 @@ jsonFileData.forEach(function(card) {
   var timeOutLoading = setTimeout(error, IMAGE_LOAD_TIMEOUT);
 
 });
+
+filters.classList.remove('hidden');
