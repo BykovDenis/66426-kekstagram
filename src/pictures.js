@@ -147,14 +147,18 @@ jsonFileData.forEach(function(card) {
     pictureCard.replaceChild(img, innerImg);
   };
 
-  img.onerror = function() {
+  var error = function() {
     pictureCard.classList.add('picture-load-failure');
+  };
+
+  img.onerror = function() {
+    error();
   };
 
   img.src = card.url;
 
   var timeOutLoading = setTimeout(function() {
-    pictureCard.classList.add('picture-load-failure');
+    error();
   }, IMAGE_LOAD_TIMEOUT);
 
 });
