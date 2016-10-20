@@ -111,8 +111,7 @@ var jsonFileData = [{
 
 // 10 время на загрузку картинки
 var IMAGE_LOAD_TIMEOUT = 10000;
-var IMG_WIDTH = 182;
-var IMG_HEIGHT = 182;
+var IMG_SIDE = 182;
 
 // Скрываем фильтры
 var filters = document.querySelector('.filters');
@@ -141,42 +140,20 @@ jsonFileData.forEach(function(card) {
 
   img.onload = function() {
     clearTimeout(timeOutLoading);
-    img.width = IMG_WIDTH;
-    img.height = IMG_HEIGHT;
-    var innerImg = pictureCard.querySelector('img');
-    pictureCard.replaceChild(img, innerImg);
+    img.width = IMG_SIDE;
+    img.height = IMG_SIDE;
+    var currentImg = pictureCard.querySelector('img');
+    pictureCard.replaceChild(img, currentImg);
   };
 
   var error = function() {
     pictureCard.classList.add('picture-load-failure');
   };
 
-  img.onerror = function() {
-    error();
-  };
+  img.onerror = error;
 
   img.src = card.url;
 
-  var timeOutLoading = setTimeout(function() {
-    error();
-  }, IMAGE_LOAD_TIMEOUT);
+  var timeOutLoading = setTimeout(error, IMAGE_LOAD_TIMEOUT);
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
