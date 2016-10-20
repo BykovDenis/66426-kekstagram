@@ -108,68 +108,56 @@ var jsonFileData = [{
   'preview': 'photos/26.jpg'
 }];
 
+
+// 10 время на загрузку картинки
+var IMAGE_LOAD_TIMEOUT = 10000;
+var IMG_WIDTH = 182;
+var IMG_HEIGHT = 182;
+
 // Скрываем фильтры
-var filters = document.querySelectorAll('.filters');
-filters.forEach(function(elem) {
-  if (!elem.classList.contains('hidden')) {
-    elem.classList.add('hidden');
-  }
-});
+var filters = document.querySelector('.filters');
+filters.classList.add('hidden');
 
 // Ищем блок для вставки элементов с картинками
 var pictures = document.querySelector('.pictures');
 // Ищем шаблон
-var template = document.getElementById('picture-template');
+var template = document.querySelector('template');
 var templateContainer = 'content' in template ? template.content : template;
 
-// строим карточки с фото и информацией
-var renderPictureCard = function(card) {
+// парсим JSON
+jsonFileData.forEach(function(card) {
+
+  // строим карточки с фото и информацией
   var pictureCard = templateContainer.querySelector('.picture').cloneNode(true);
   pictureCard.querySelector('.picture-likes').innerText = card.likes;
   pictureCard.querySelector('.picture-comments').innerText = card.comments;
 
   // Создаем картинку
   var img = new Image();
-  renderImage(img, card.url, pictureCard);
-
   pictures.appendChild(pictureCard);
-};
 
-//Отрисовка картинок
-var renderImage = function(img, url, container) {
+  //Отрисовка картинок
   // Работа с загрузкой картинок
-  var IMAGE_LOAD_TIMEOUT = 10000; // 10 время на загрузку картинки
-  var timeOutLoading = null;
 
   img.onload = function() {
     clearTimeout(timeOutLoading);
-    img.width = 182;
-    img.height = 182;
-    // Ужасный костыль, но что поделать в задании картинку через new Image() делать надо, следовательно старую нужно куда-то задвинуть
-    var innerImg = container.getElementsByTagName('img');
-    container.appendChild(img);
-    innerImg[0].parentNode.removeChild(innerImg[0]);
+    img.width = IMG_WIDTH;
+    img.height = IMG_HEIGHT;
+    var innerImg = pictureCard.querySelector('img');
+    pictureCard.replaceChild(img, innerImg);
   };
 
   img.onerror = function() {
-    if (!pictures.classList.contains('picture-load-failure')) {
-      container.classList.add('picture-load-failure');
-    }
+    pictureCard.classList.add('picture-load-failure');
   };
 
-  img.src = url;
+  img.src = card.url;
 
-  timeOutLoading = setTimeout(function() {
-    if (!container.classList.contains('picture-load-failure')) {
-      container.classList.add('picture-load-failure');
-    }
+  var timeOutLoading = setTimeout(function() {
+    pictureCard.classList.add('picture-load-failure');
   }, IMAGE_LOAD_TIMEOUT);
-};
 
-// парсим JSON
-jsonFileData.forEach(function(elem) {
-  renderPictureCard(elem);
-}, this);
+});
 
 
 
