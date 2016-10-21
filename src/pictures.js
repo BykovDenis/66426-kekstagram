@@ -1,22 +1,16 @@
 'use strict';
 
 // Загружаем переменную в память
-var loadJSONData = function(url, callback, callBackName) {
-  window[callBackName] = function(data) {
+var loadJSONData = function(url, callback) {
+  window.__callBackName = function(data) {
     callback(data);
   };
   var script = document.createElement('script');
-  script.src = url + '?callback=' + callBackName;
+  script.src = url + '?callback=__callBackName';
   document.body.appendChild(script);
 };
 
-var dataPictures = function(pictures) {
-  renderGallery(pictures);
-};
-
 var url = 'http://localhost:1507/api/pictures';
-
-loadJSONData(url, dataPictures, '__callBackName');
 
 var renderGallery = function(pictures) {
 
@@ -73,3 +67,4 @@ var renderGallery = function(pictures) {
   filters.classList.remove('hidden');
 
 };
+loadJSONData(url, renderGallery);
