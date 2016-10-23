@@ -2,11 +2,15 @@
 
 // Загружаем переменную в память
 var loadJSONData = function(url, callback) {
+
+  var __callBackName = '__callBackName'; // 'cb' + Date.now();
+
   window.__callBackName = function(data) {
     callback(data);
   };
+
   var script = document.createElement('script');
-  script.src = url + '?callback=__callBackName';
+  script.src = url + '?callback=' + __callBackName;
   document.body.appendChild(script);
 };
 
