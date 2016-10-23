@@ -64,6 +64,9 @@ var renderGallery = function(pictures) {
 
   });
 
+  // Отображаем фильтры
+  filters.classList.remove('hidden');
+
 };
 
   // Скрываем фильтры
@@ -71,6 +74,3 @@ var filters = document.querySelector('.filters');
 filters.classList.add('hidden');
 
 loadJSONData(url, renderGallery);
-
-// Отображаем фильтры
-filters.classList.remove('hidden');
