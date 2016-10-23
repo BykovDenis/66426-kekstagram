@@ -12,7 +12,6 @@ var loadJSONData = function(url, callback) {
 
   var script = document.createElement('script');
   script.src = url + '?callback=' + __callBackName;
-  script.id = __callBackName;
   document.body.appendChild(script);
 };
 
