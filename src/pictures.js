@@ -7,10 +7,12 @@ var loadJSONData = function(url, callback) {
 
   window[__callBackName] = function(data) {
     callback(data);
+    script.parentNode.removeChild(script);
   };
 
   var script = document.createElement('script');
   script.src = url + '?callback=' + __callBackName;
+  script.id = __callBackName;
   document.body.appendChild(script);
 };
 
@@ -21,10 +23,6 @@ var renderGallery = function(pictures) {
   // 10 время на загрузку картинки
   var IMAGE_LOAD_TIMEOUT = 10000;
   var IMG_SIDE = 182;
-
-  // Скрываем фильтры
-  var filters = document.querySelector('.filters');
-  filters.classList.add('hidden');
 
   // Ищем блок для вставки элементов с картинками
   var picturesContainer = document.querySelector('.pictures');
@@ -67,8 +65,13 @@ var renderGallery = function(pictures) {
 
   });
 
-  // Отображаем фильтры
-  filters.classList.remove('hidden');
-
 };
+
+  // Скрываем фильтры
+var filters = document.querySelector('.filters');
+filters.classList.add('hidden');
+
 loadJSONData(url, renderGallery);
+
+// Отображаем фильтры
+filters.classList.remove('hidden');
