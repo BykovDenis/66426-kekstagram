@@ -3,9 +3,9 @@
 // Загружаем переменную в память
 var loadJSONData = function(url, callback) {
 
-  var __callBackName = '__callBackName'; // 'cb' + Date.now();
+  var __callBackName = 'cb' + Date.now();
 
-  window.__callBackName = function(data) {
+  window[__callBackName] = function(data) {
     callback(data);
   };
 
