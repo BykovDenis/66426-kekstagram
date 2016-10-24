@@ -1,9 +1,9 @@
 'use strict';
 
-var loadJSONData = require('load');
-var renderPicture = require('picture');
+var loadJSONData = require('./load');
+var renderPicture = require('./picture');
 
-var renderGallery = function(pictures) {
+module.exports = function(pictures) {
 
   // 10 время на загрузку картинки
   var IMAGE_LOAD_TIMEOUT = 10000;
