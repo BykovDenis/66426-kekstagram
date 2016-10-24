@@ -3,7 +3,7 @@
 var loadJSONData = require('./load');
 var renderPicture = require('./picture');
 
-module.exports = function(pictures) {
+var renderGallery = function(pictures) {
 
   // 10 время на загрузку картинки
   var IMAGE_LOAD_TIMEOUT = 10000;
