@@ -2,8 +2,15 @@
 
 var loadJSONData = require('./load');
 var renderPicture = require('./picture');
+var gallery = require('./gallery');
 
 var renderGallery = function(pictures) {
+
+  var setPictures = function() {
+    gallery.pictures = pictures;
+  };
+
+  setPictures();
 
   // 10 время на загрузку картинки
   var IMAGE_LOAD_TIMEOUT = 10000;
@@ -16,7 +23,7 @@ var renderGallery = function(pictures) {
   var templateContainer = 'content' in template ? template.content : template;
 
   // парсим JSON
-  pictures.forEach(function(card) {
+  pictures.forEach(function(card, index) {
 
     // строим карточки с фото и информацией
     var pictureCard = templateContainer.querySelector('.picture').cloneNode(true);
@@ -32,7 +39,7 @@ var renderGallery = function(pictures) {
 
     img.onload = function() {
       clearTimeout(timeOutLoading);
-      renderPicture(img, pictureCard, IMG_SIDE);
+      renderPicture(img, index, pictureCard, IMG_SIDE);
     };
 
     var error = function() {
