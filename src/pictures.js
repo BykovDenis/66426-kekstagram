@@ -1,21 +1,7 @@
 'use strict';
 
-// Загружаем переменную в память
-var loadJSONData = function(url, callback) {
-
-  var __callBackName = 'cb' + Date.now();
-
-  window[__callBackName] = function(data) {
-    callback(data);
-    script.parentNode.removeChild(script);
-  };
-
-  var script = document.createElement('script');
-  script.src = url + '?callback=' + __callBackName;
-  document.body.appendChild(script);
-};
-
-var url = 'http://localhost:1507/api/pictures';
+var loadJSONData = require('./load');
+var renderPicture = require('./picture');
 
 var renderGallery = function(pictures) {
 
@@ -46,10 +32,7 @@ var renderGallery = function(pictures) {
 
     img.onload = function() {
       clearTimeout(timeOutLoading);
-      img.width = IMG_SIDE;
-      img.height = IMG_SIDE;
-      var currentImg = pictureCard.querySelector('img');
-      pictureCard.replaceChild(img, currentImg);
+      renderPicture(img, pictureCard, IMG_SIDE);
     };
 
     var error = function() {
@@ -72,5 +55,7 @@ var renderGallery = function(pictures) {
   // Скрываем фильтры
 var filters = document.querySelector('.filters');
 filters.classList.add('hidden');
+
+var url = 'http://localhost:1507/api/pictures';
 
 loadJSONData(url, renderGallery);
