@@ -12,8 +12,17 @@ var Gallery = function() {
   this.galleryOverlayClose = document.querySelector('.gallery-overlay-close');
   this.galleryOverlayImage = document.querySelector('.gallery-overlay-image');
 
+  var that = this;
+
   this.galleryOverlayClose.onclick = function() {
-    this.hide();
+    that.hide();
+  };
+
+  this.galleryOverlayImage.onclick = function(event) {
+    if(++that.activePicture >= that.pictures.length) {
+      that.activePicture = 0;
+    }
+    that.setActivePicture(that.activePicture);
   };
 
 };
@@ -25,26 +34,33 @@ Gallery.prototype = {
     });
   },
   show: function(index) {
-/*
-    this.galleryOverlay.onclick = function(event) {
-      event.preventDefault();
-      console.info('Наажата фотка из галлереи ' + event.target);
-    };
-*/
-    if (this.galleryOverlayImage.classList.contains('invisible')) {
-      this.galleryOverlayImage.classList.remove('invisible');
+
+    if (this.galleryOverlay.classList.contains('invisible')) {
+      this.galleryOverlay.classList.remove('invisible');
     }
-    if (++index > this.pictures.length) {
-      index = 0;
-    }
+
     this.setActivePicture(index);
   },
   hide: function() {
-    this.galleryOverlayImage.classList.add('invisible');
+    this.galleryOverlay.classList.add('invisible');
+
+    this.galleryOverlayClose.onclick = null;
+    this.galleryOverlayImage.onclick = null;
+    this.galleryOverlayImage.onerror = null;
+
   },
   setActivePicture: function(index) {
     this.activePicture = index;
-    this.galleryOverlay.src = this.pictures[index].src;
+
+    var that = this;
+
+    var error = function() {
+      that.galleryOverlayImage.classList.add('picture-load-failure');
+    };
+
+    this.galleryOverlayImage.onerror = error;
+    this.galleryOverlayImage.src = this.pictures[index].url;
+
     document.querySelector('.likes-count').innerText = this.pictures[index].likes;
     document.querySelector('.comments-count').innerText = this.pictures[index].comments;
   }
