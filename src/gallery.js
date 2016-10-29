@@ -12,34 +12,33 @@ var Gallery = function() {
   this.galleryOverlayClose = document.querySelector('.gallery-overlay-close');
   this.galleryOverlayImage = document.querySelector('.gallery-overlay-image');
 
-  var that = this;
-
-  this.galleryOverlayClose.onclick = function() {
-    that.hide();
-  };
-
-  this.galleryOverlayImage.onclick = function(event) {
-    if(++that.activePicture >= that.pictures.length) {
-      that.activePicture = 0;
-    }
-    that.setActivePicture(that.activePicture);
-  };
-
 };
 
 Gallery.prototype = {
   setPictures: function(data) {
+    var that = this;
     data.forEach(function(elem, index) {
-      this.pictures[index] = elem;
+      that.pictures[index] = elem;
     });
   },
   show: function(index) {
 
-    if (this.galleryOverlay.classList.contains('invisible')) {
-      this.galleryOverlay.classList.remove('invisible');
-    }
+    var that = this;
 
+    this.galleryOverlayClose.onclick = function() {
+      that.hide();
+    };
+
+    this.galleryOverlayImage.onclick = function(event) {
+      if(++that.activePicture >= that.pictures.length) {
+        that.activePicture = 0;
+      }
+      that.setActivePicture(that.activePicture);
+    };
+
+    this.galleryOverlay.classList.remove('invisible');
     this.setActivePicture(index);
+
   },
   hide: function() {
     this.galleryOverlay.classList.add('invisible');
@@ -54,11 +53,14 @@ Gallery.prototype = {
 
     var that = this;
 
-    var error = function() {
+    this.galleryOverlayImage.onerror = function() {
       that.galleryOverlayImage.classList.add('picture-load-failure');
     };
 
-    this.galleryOverlayImage.onerror = error;
+    this.galleryOverlayImage.onload = function() {
+      that.galleryOverlayImage.classList.remove('picture-load-failure');
+    };
+
     this.galleryOverlayImage.src = this.pictures[index].url;
 
     document.querySelector('.likes-count').innerText = this.pictures[index].likes;

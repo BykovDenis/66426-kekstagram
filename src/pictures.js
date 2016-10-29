@@ -6,11 +6,7 @@ var gallery = require('./gallery');
 
 var renderGallery = function(pictures) {
 
-  var setPictures = function() {
-    gallery.pictures = pictures;
-  };
-
-  setPictures();
+  gallery.setPictures(pictures);
 
   // 10 время на загрузку картинки
   var IMAGE_LOAD_TIMEOUT = 10000;
