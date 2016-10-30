@@ -16,10 +16,7 @@ var Gallery = function() {
 
 Gallery.prototype = {
   setPictures: function(data) {
-    var that = this;
-    data.forEach(function(elem, index) {
-      that.pictures[index] = elem;
-    });
+    this.pictures = data;
   },
   show: function(index) {
 
@@ -29,10 +26,7 @@ Gallery.prototype = {
       that.hide();
     };
 
-    this.galleryOverlayImage.onclick = function(event) {
-      if(++that.activePicture >= that.pictures.length) {
-        that.activePicture = 0;
-      }
+    this.galleryOverlayImage.onclick = function() {
       that.setActivePicture(that.activePicture);
     };
 
@@ -49,7 +43,11 @@ Gallery.prototype = {
 
   },
   setActivePicture: function(index) {
+
     this.activePicture = index;
+    if (this.activePicture >= this.pictures.length) {
+      this.activePicture = 0;
+    }
 
     var that = this;
 
@@ -61,10 +59,13 @@ Gallery.prototype = {
       that.galleryOverlayImage.classList.remove('picture-load-failure');
     };
 
-    this.galleryOverlayImage.src = this.pictures[index].url;
+    this.galleryOverlayImage.src = this.pictures[this.activePicture].url;
 
-    document.querySelector('.likes-count').innerText = this.pictures[index].likes;
-    document.querySelector('.comments-count').innerText = this.pictures[index].comments;
+    document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
+    document.querySelector('.comments-count').innerText = this.pictures[this.activePicture].comments;
+
+    this.activePicture++;
+
   }
 };
 
