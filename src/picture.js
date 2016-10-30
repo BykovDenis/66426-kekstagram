@@ -16,10 +16,10 @@ var Picture = function(card, index, pictureCard) {
   };
 
   // Создаем картинку
-  this.data.img = new Image();
+  this.img = new Image();
   var that = this;
 
-  this.data.img.onload = function() {
+  this.img.onload = function() {
     clearTimeout(timeOutLoading);
     var currentImg = that.data.pictureCard.querySelector('img');
     pictureCard.replaceChild(this, currentImg);
@@ -34,13 +34,13 @@ var Picture = function(card, index, pictureCard) {
     gallery.show(index);
   };
 
-  this.data.img.onerror = error;
+  this.img.onerror = error;
 
-  this.data.img.width = IMG_SIDE;
-  this.data.img.height = IMG_SIDE;
-  this.data.img.src = this.data.card.url;
+  this.img.width = IMG_SIDE;
+  this.img.height = IMG_SIDE;
+  this.img.src = this.data.card.url;
 
-  this.data.img.onclick = onclick;
+  this.img.onclick = onclick;
 
   var timeOutLoading = setTimeout(error, IMAGE_LOAD_TIMEOUT);
 
@@ -50,9 +50,7 @@ var Picture = function(card, index, pictureCard) {
 
 Picture.prototype = {
   remove: function() {
-    this.data.img.onload = null;
-    this.data.img.error = null;
-    this.data.onclick = null;
+    this.img.onclick = null;
   },
 };
 
