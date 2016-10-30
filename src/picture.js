@@ -23,8 +23,6 @@ var Picture = function(card, index, pictureCard) {
     clearTimeout(timeOutLoading);
     var currentImg = that.data.pictureCard.querySelector('img');
     pictureCard.replaceChild(this, currentImg);
-
-    that.remove();
   };
 
   var error = function() {
@@ -54,6 +52,7 @@ Picture.prototype = {
   remove: function() {
     this.data.img.onload = null;
     this.data.img.error = null;
+    this.data.onclick = null;
   },
 };
 
