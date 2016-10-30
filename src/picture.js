@@ -3,17 +3,21 @@
 
 var gallery = require('./gallery');
 
-var Picture = function(card, index, pictureCard) {
+var Picture = function(card, index, element) {
 
   // 10 время на загрузку картинки
   var IMAGE_LOAD_TIMEOUT = 10000;
   var IMG_SIDE = 182;
 
+  this.element = element;
+
   this.data = {
-    pictureCard: pictureCard,
     card: card,
     index: index,
   };
+
+  this.element.querySelector('.picture-likes').innerText = this.data.card.likes;
+  this.element.querySelector('.picture-comments').innerText = this.data.card.comments;
 
   // Создаем картинку
   this.img = new Image();
@@ -21,12 +25,12 @@ var Picture = function(card, index, pictureCard) {
 
   this.img.onload = function() {
     clearTimeout(timeOutLoading);
-    var currentImg = that.data.pictureCard.querySelector('img');
-    pictureCard.replaceChild(this, currentImg);
+    var currentImg = that.element.querySelector('img');
+    that.element.replaceChild(this, currentImg);
   };
 
   var error = function() {
-    pictureCard.classList.add('picture-load-failure');
+    that.element.classList.add('picture-load-failure');
   };
 
   var onclick = function(event) {
@@ -40,17 +44,15 @@ var Picture = function(card, index, pictureCard) {
   this.img.height = IMG_SIDE;
   this.img.src = this.data.card.url;
 
-  this.img.onclick = onclick;
+  this.element.onclick = onclick;
 
   var timeOutLoading = setTimeout(error, IMAGE_LOAD_TIMEOUT);
-
-  this.element = pictureCard;
 
 };
 
 Picture.prototype = {
   remove: function() {
-    this.img.onclick = null;
+    this.element.onclick = null;
   },
 };
 
