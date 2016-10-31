@@ -1,16 +1,12 @@
 'use strict';
 
 var loadJSONData = require('./load');
-var renderPicture = require('./picture');
+var Picture = require('./picture');
 var gallery = require('./gallery');
 
 var renderGallery = function(pictures) {
 
   gallery.setPictures(pictures);
-
-  // 10 время на загрузку картинки
-  var IMAGE_LOAD_TIMEOUT = 10000;
-  var IMG_SIDE = 182;
 
   // Ищем блок для вставки элементов с картинками
   var picturesContainer = document.querySelector('.pictures');
@@ -26,27 +22,8 @@ var renderGallery = function(pictures) {
     pictureCard.querySelector('.picture-likes').innerText = card.likes;
     pictureCard.querySelector('.picture-comments').innerText = card.comments;
 
-    // Создаем картинку
-    var img = new Image();
-    picturesContainer.appendChild(pictureCard);
-
-    //Отрисовка картинок
-    // Работа с загрузкой картинок
-
-    img.onload = function() {
-      clearTimeout(timeOutLoading);
-      renderPicture(img, index, pictureCard, IMG_SIDE);
-    };
-
-    var error = function() {
-      pictureCard.classList.add('picture-load-failure');
-    };
-
-    img.onerror = error;
-
-    img.src = card.url;
-
-    var timeOutLoading = setTimeout(error, IMAGE_LOAD_TIMEOUT);
+    var objPicture = new Picture(card, index, pictureCard);
+    picturesContainer.appendChild(objPicture.element);
 
   });
 
