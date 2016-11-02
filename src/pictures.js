@@ -36,6 +36,33 @@ var renderGallery = function(pictures) {
 var filters = document.querySelector('.filters');
 filters.classList.add('hidden');
 
-var url = 'http://localhost:1507/api/pictures';
+var url = 'api/pictures';
+var params = {
+  from: 0,
+  to: 12,
+  filter: '',
+};
+loadJSONData(url, params, renderGallery);
 
-loadJSONData(url, renderGallery);
+// Функция для определения позиции скроллинга
+function isScrolling() {
+  var footerElement = document.querySelector('footer');
+  var footerPosition = footerElement.getBoundingClientRect();
+  return footerPosition.top - window.innerHeight - 100 <= 0;
+}
+
+// Функция для подгрузки фото
+function getScrolling() {
+  if(isScrolling) {
+    params.from = params.to;
+    params.to += 12;
+    loadJSONData(url, params, renderGallery);
+  }
+}
+
+// Обработчик событий на скроллинг экрана
+window.addEventListener('scroll', function() {
+  var interval = setInterval(getScrolling, 100);
+
+});
+window.removeEventListener('scroll', getScrolling);
