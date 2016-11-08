@@ -3,8 +3,15 @@
 var loadJSONData = require('./load');
 var Picture = require('./picture');
 var gallery = require('./gallery');
+var filtersData = require('../../bin/data/filter');
+
+var THROTTLE_DELAY = 100;
+var COUNT_PHOTO_BY_SCROLL = 12;
 
 var renderGallery = function(pictures) {
+
+  //фильтр изображений
+  pictures = filtersData(pictures, params.filter);
 
   gallery.setPictures(pictures);
 
@@ -39,8 +46,8 @@ filters.classList.add('hidden');
 var url = 'api/pictures';
 var params = {
   from: 0,
-  to: 12,
-  filter: '',
+  to: COUNT_PHOTO_BY_SCROLL,
+  filter: 'filter-popular',
 };
 loadJSONData(url, params, renderGallery);
 
@@ -55,14 +62,34 @@ function isScrolling() {
 function getScrolling() {
   if(isScrolling) {
     params.from = params.to;
-    params.to += 12;
+    params.to += COUNT_PHOTO_BY_SCROLL;
     loadJSONData(url, params, renderGallery);
   }
 }
 
+
+var curDate = Date.now();
+var that = this;
 // Обработчик событий на скроллинг экрана
 window.addEventListener('scroll', function() {
-  var interval = setInterval(getScrolling, 100);
-
+  var curDate1 = Date.now();
+  if (curDate1 - curDate >= THROTTLE_DELAY) {
+    getScrolling();
+  }
+  curDate = Date.now();
 });
 window.removeEventListener('scroll', getScrolling);
+
+
+// Обрабатываем фильтры
+var filters = document.querySelector('.filters');
+filters.addEventListener('click', function(event) {
+  if(event.target.classList.contains('filters-radio')) {
+    // Чистим данные
+    params.from = 0;
+    params.to = COUNT_PHOTO_BY_SCROLL;
+    document.querySelector('.pictures').innerHTML = '';
+    loadJSONData(url, params, renderGallery);
+  }
+
+});

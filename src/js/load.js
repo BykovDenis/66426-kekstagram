@@ -16,7 +16,7 @@ module.exports = function(url, params, callback) {
     }
   };
   params.from = params.from ? params.from : 0;
-  params.to = params.to ? params.to : 50;
+  params.to = params.to ? params.to : 12;
   params.filter = params.filter ? params.filter : '';
   var urlWithParams = url + '?from=' + params.from + '&to=' + params.to + '&filter=' + params.filter;
   xhr.open('GET', urlWithParams, true);
