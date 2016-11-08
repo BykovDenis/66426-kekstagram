@@ -8,10 +8,10 @@ var filtersData = require('../../bin/data/filter');
 var THROTTLE_DELAY = 100;
 var COUNT_PHOTO_BY_SCROLL = 12;
 
-var renderGallery = function(pictures) {
+var renderGallery = function(data) {
 
   //фильтр изображений
-  pictures = filtersData(pictures, params.filter);
+  var pictures = filtersData(data, params.filter);
 
   gallery.setPictures(pictures);
 
@@ -69,7 +69,6 @@ function getScrolling() {
 
 
 var curDate = Date.now();
-var that = this;
 // Обработчик событий на скроллинг экрана
 window.addEventListener('scroll', function() {
   var curDate1 = Date.now();
@@ -82,7 +81,6 @@ window.removeEventListener('scroll', getScrolling);
 
 
 // Обрабатываем фильтры
-var filters = document.querySelector('.filters');
 filters.addEventListener('click', function(event) {
   if(event.target.classList.contains('filters-radio')) {
     // Чистим данные
