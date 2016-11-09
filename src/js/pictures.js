@@ -51,32 +51,28 @@ var params = {
 };
 loadJSONData(url, params, renderGallery);
 
+
+var footerElement = document.querySelector('footer');
 // Функция для определения позиции скроллинга
 function isScrolling() {
-  var footerElement = document.querySelector('footer');
   var footerPosition = footerElement.getBoundingClientRect();
   return footerPosition.top - window.innerHeight - 100 <= 0;
 }
 
+var curDate = Date.now();
 // Функция для подгрузки фото
 function getScrolling() {
-  if(isScrolling) {
+  if(isScrolling && (Date.now() - curDate >= THROTTLE_DELAY)) {
     params.from = params.to;
     params.to += COUNT_PHOTO_BY_SCROLL;
     loadJSONData(url, params, renderGallery);
+    curDate = Date.now();
   }
 }
 
-
-var curDate = Date.now();
 // Обработчик событий на скроллинг экрана
-window.addEventListener('scroll', function() {
-  if (Date.now() - curDate >= THROTTLE_DELAY) {
-    getScrolling();
-  }
-  curDate = Date.now();
-});
-// window.removeEventListener('scroll', getScrolling);
+window.addEventListener('scroll', getScrolling);
+window.removeEventListener('scroll', getScrolling);
 
 
 // Обрабатываем фильтры
