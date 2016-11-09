@@ -149,18 +149,21 @@
 
         showMessage(Action.UPLOADING);
 
-        fileReader.onload = function() {
+        fileReader.addEventListener('load', function() {
           cleanupResizer();
 
           currentResizer = new Resizer(fileReader.result);
+          window.resizer = currentResizer;
+
           currentResizer.setElement(resizeForm);
           uploadMessage.classList.add('invisible');
 
           uploadForm.classList.add('invisible');
           resizeForm.classList.remove('invisible');
 
+          movePhoto();
           hideMessage();
-        };
+        });
 
         fileReader.readAsDataURL(element.files[0]);
       } else {
@@ -261,7 +264,7 @@
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
    * выбранному значению в форме.
    */
-  filterForm.addEventLister('change', function() {
+  filterForm.addEventListener('change', function() {
     if (!filterMap) {
       // Ленивая инициализация. Объект не создается до тех пор, пока
       // не понадобится прочитать его в первый раз, а после этого запоминается
@@ -309,6 +312,7 @@
   // Кнопка отправки данных на сервер
   var sbmSend = frmUploadResize.elements.fwd;
 
+
   // Поля «сверху» и «слева» не могут быть отрицательными.
   partLeft.min = 0;
   partTop.min = 0;
@@ -320,17 +324,29 @@
    * Метод валидации элементов формы
    *
    */
-  var validateForm = function() {
+  var validateForm = function(event) {
 
     if(currentResizer) {
     // Параметры исходного изображения
       widthImage = currentResizer._image.naturalWidth;
       heightImage = currentResizer._image.naturalHeight;
 
-      //Проверяем заполнены ли поля, преобразуем к числовому виду
-      partLeft.value = parseInt(partLeft.value, 10) || 0;
-      partTop.value = parseInt(partTop.value, 10) || 0;
-      sideSize.value = parseInt(sideSize.value, 10) || 0;
+      // Масштабирование рамки
+      if (event.target.name === 'size') {
+        var square = window.resizer.getConstraint();
+        window.resizer.setConstraint((window.resizer._container.width - parseInt(event.target.value, 10)) / 2,
+          (window.resizer._container.height - parseInt(event.target.value, 10)) / 2, parseInt(event.target.value, 10));
+      }
+      if(event.target.name === 'x') {
+        window.resizer.setConstraint(parseInt(event.target.value, 10));
+        window.resizer.moveConstraint(parseInt(event.target.value, 10) - parseInt(partLeft.value, 10));
+        //partLeft.value = parseInt(event.target.value, 10) || 0;
+      }
+      if(event.target.name === 'y') {
+        window.resizer.setConstraint(parseInt(partLeft.value, 10), parseInt(event.target.value, 10));
+        window.resizer.moveConstraint(parseInt(event.target.value, 10) - parseInt(partTop.value, 10));
+        //partTop.value = parseInt(event.target.value, 10) || 0;
+      }
 
       // Сумма значений полей «слева» и «сторона»
       var sizeTopLeft = (parseInt(partLeft.value, 10) + parseInt(partTop.value, 10));
@@ -367,12 +383,39 @@
   validateForm();
 
   // Навешиваем события DOM level 2 на текстовые поля ввода
-
   partLeft.addEventListener('input', validateForm);
   partTop.addEventListener('input', validateForm);
   sideSize.addEventListener('input', validateForm);
 
+
+  var movePhoto = function() {
+
+    // Определяем форму для валидации
+    if (!frmUploadResize) {
+      return;
+    }
+    var square = window.resizer.getConstraint() || {x: 0, y: 0, size: 0};
+    //Определяем элементы формы
+    // Определяем поля ввода для валидации на форме
+    // Положение кадра слева
+    frmUploadResize.elements.x.value = parseInt(square.x, 10) || 0;
+    // Положение кадра слева
+    frmUploadResize.elements.y.value = parseInt(square.y, 10) || 0;
+    //  Размер стороны квадрата который будет вырезан из изображения
+    frmUploadResize.elements.size.value = square.side;
+
+  };
+
+  // Обработчик на ресайз окна
+  window.addEventListener('resizerchange', movePhoto);
+
+  var scaleBorder = function() {
+    window.resizer.setConstraint(parseInt(partLeft.value, 10), parseInt(partTop.value, 10), parseInt(event.target.value, 10));
+  };
+
   cleanupResizer();
   updateBackground();
+
+
 
 })();
