@@ -2,35 +2,16 @@
 
 module.exports = function(list, filterID) {
 
-
   var sortByLikes = function(a, b) {
-    var date1 = a.likes;
-    var date2 = b.likes;
-    if(date1 <= date2) {
-      return 1;
-    } else {
-      return -1;
-    }
+    return a.likes <= b.likes;
   };
 
   var sortByDate = function(a, b) {
-    var date1 = a.date;
-    var date2 = b.date;
-    if(date1 <= date2) {
-      return 1;
-    } else {
-      return -1;
-    }
+    return a.date <= b.date;
   };
 
   var sortByDiscussed = function(a, b) {
-    var date1 = a.comments;
-    var date2 = b.comments;
-    if(date1 <= date2) {
-      return 1;
-    } else {
-      return -1;
-    }
+    return a.comments <= b.comments;
   };
 
   if (filterID === 'filter-popular') {

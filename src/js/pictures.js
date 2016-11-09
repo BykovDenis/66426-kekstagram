@@ -71,13 +71,12 @@ function getScrolling() {
 var curDate = Date.now();
 // Обработчик событий на скроллинг экрана
 window.addEventListener('scroll', function() {
-  var curDate1 = Date.now();
-  if (curDate1 - curDate >= THROTTLE_DELAY) {
+  if (Date.now() - curDate >= THROTTLE_DELAY) {
     getScrolling();
   }
   curDate = Date.now();
 });
-window.removeEventListener('scroll', getScrolling);
+// window.removeEventListener('scroll', getScrolling);
 
 
 // Обрабатываем фильтры

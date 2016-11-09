@@ -9,7 +9,7 @@ module.exports = function(url, params, callback) {
   xhr.onload = function() {
     try {
       if (xhr.status === 200 && xhr.readyState === 4) {
-        return callback(JSON.parse(xhr.response));
+        callback(JSON.parse(xhr.response));
       }
     } catch(e) {
       console.log(e);
@@ -17,11 +17,11 @@ module.exports = function(url, params, callback) {
     return false;
   };
 
-  params.from = params.from ? params.from : 0;
-  params.to = params.to ? params.to : 12;
-  params.filter = params.filter ? params.filter : '';
+  params.from = params.from || 0;
+  params.to = params.to || 12;
+  params.filter = params.filter || '';
   var urlWithParams = url + '?from=' + params.from + '&to=' + params.to + '&filter=' + params.filter;
-  xhr.open('GET', urlWithParams, true);
+  xhr.open('GET', urlWithParams);
   xhr.send();
 
 };
