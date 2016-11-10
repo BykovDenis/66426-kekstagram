@@ -39,7 +39,7 @@ var renderGallery = function(data) {
 
 };
 
-  // Скрываем фильтры
+// Скрываем фильтры
 var filters = document.querySelector('.filters');
 
 // Смотрим есть ли в localStorage что-нибудь
@@ -99,7 +99,8 @@ filters.addEventListener('click', function(event) {
     params.from = 0;
     params.to = COUNT_PHOTO_BY_SCROLL;
     params.filter = event.target.id;
-
+    // Записываем выбранный фильтр
+    localStorage.setItem('filterID', event.target.id);
     document.querySelector('.pictures').innerHTML = '';
     loadJSONData(url, params, renderGallery);
   }
