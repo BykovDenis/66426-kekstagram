@@ -333,7 +333,6 @@
 
       // Масштабирование рамки
       if (event.target.name === 'size') {
-        var square = window.resizer.getConstraint();
         window.resizer.setConstraint((window.resizer._container.width - parseInt(event.target.value, 10)) / 2,
           (window.resizer._container.height - parseInt(event.target.value, 10)) / 2, parseInt(event.target.value, 10));
       }
@@ -408,10 +407,6 @@
 
   // Обработчик на ресайз окна
   window.addEventListener('resizerchange', movePhoto);
-
-  var scaleBorder = function() {
-    window.resizer.setConstraint(parseInt(partLeft.value, 10), parseInt(partTop.value, 10), parseInt(event.target.value, 10));
-  };
 
   cleanupResizer();
   updateBackground();
