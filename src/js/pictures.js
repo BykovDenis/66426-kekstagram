@@ -5,7 +5,7 @@ var Picture = require('./picture');
 var gallery = require('./gallery');
 var filtersData = require('../../bin/data/filter');
 
-var THROTTLE_DELAY = 100;
+var THROTTLE_DELAY = 5000;
 var COUNT_PHOTO_BY_SCROLL = 12;
 
 var renderGallery = function(data) {
@@ -64,20 +64,32 @@ function isScrolling() {
   return footerPosition.top - window.innerHeight - 100 <= 0;
 }
 
-var curDate = Date.now();
+var throttle = function(callback, timeout) {
+  if (!window.hasOwnProperty('curTime')) {
+    window.curTime = Date.now();
+  }
+  console.log(Date.now(), window.curTime);
+  if (Date.now() - window.curTime >= timeout) {
+    callback();
+    window.curTime = Date.now();
+  }
+
+};
+
 // Функция для подгрузки фото
 function getScrolling() {
-  if(isScrolling && (Date.now() - curDate >= THROTTLE_DELAY)) {
+  if(isScrolling) {
     params.from = params.to;
     params.to += COUNT_PHOTO_BY_SCROLL;
     loadJSONData(url, params, renderGallery);
-    curDate = Date.now();
   }
 }
 
+var optimizedScroll = throttle(getScrolling, THROTTLE_DELAY);
+
 // Обработчик событий на скроллинг экрана
-window.addEventListener('scroll', getScrolling);
-window.removeEventListener('scroll', getScrolling);
+window.addEventListener('scroll', optimizedScroll);
+window.removeEventListener('scroll', optimizedScroll);
 
 
 // Обрабатываем фильтры
