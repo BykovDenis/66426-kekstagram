@@ -139,7 +139,7 @@
    * и показывается форма кадрирования.
    * @param {Event} evt
    */
-  uploadForm.onchange = function(evt) {
+  uploadForm.addEventListener('change', function(evt) {
     var element = evt.target;
     if (element.id === 'upload-file') {
       // Проверка типа загружаемого файла, тип должен быть изображением
@@ -149,18 +149,21 @@
 
         showMessage(Action.UPLOADING);
 
-        fileReader.onload = function() {
+        fileReader.addEventListener('load', function() {
           cleanupResizer();
 
           currentResizer = new Resizer(fileReader.result);
+          window.resizer = currentResizer;
+
           currentResizer.setElement(resizeForm);
           uploadMessage.classList.add('invisible');
 
           uploadForm.classList.add('invisible');
           resizeForm.classList.remove('invisible');
 
+          movePhoto();
           hideMessage();
-        };
+        });
 
         fileReader.readAsDataURL(element.files[0]);
       } else {
@@ -168,14 +171,14 @@
         showMessage(Action.ERROR);
       }
     }
-  };
+  });
 
   /**
    * Обработка сброса формы кадрирования. Возвращает в начальное состояние
    * и обновляет фон.
    * @param {Event} evt
    */
-  resizeForm.onreset = function(evt) {
+  resizeForm.addEventListener('reset', function(evt) {
     evt.preventDefault();
 
     cleanupResizer();
@@ -183,14 +186,14 @@
 
     resizeForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
-  };
+  });
 
   /**
    * Обработка отправки формы кадрирования. Если форма валидна, экспортирует
    * кропнутое изображение в форму добавления фильтра и показывает ее.
    * @param {Event} evt
    */
-  resizeForm.onsubmit = function(evt) {
+  resizeForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
 
     if (resizeFormIsValid()) {
@@ -205,18 +208,18 @@
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
     }
-  };
+  });
 
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
    * @param {Event} evt
    */
-  filterForm.onreset = function(evt) {
+  filterForm.addEventListener('reset', function(evt) {
     evt.preventDefault();
 
     filterForm.classList.add('invisible');
     resizeForm.classList.remove('invisible');
-  };
+  });
 
   /**
    * Количество дней со дня рождения Грейс Хоппер
@@ -241,7 +244,7 @@
    * записав сохраненный фильтр в cookie.
    * @param {Event} evt
    */
-  filterForm.onsubmit = function(evt) {
+  filterForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
 
     var filter = filterForm.getElementsByTagName('img')[0].className.replace('filter-image-preview ', '');
@@ -255,13 +258,13 @@
 
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
-  };
+  });
 
   /**
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
    * выбранному значению в форме.
    */
-  filterForm.onchange = function() {
+  filterForm.addEventListener('change', function() {
     if (!filterMap) {
       // Ленивая инициализация. Объект не создается до тех пор, пока
       // не понадобится прочитать его в первый раз, а после этого запоминается
@@ -282,7 +285,7 @@
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
-  };
+  });
 
   var filter = window.Cookies.get('upload-filter');
   if(filter) {
@@ -309,6 +312,7 @@
   // Кнопка отправки данных на сервер
   var sbmSend = frmUploadResize.elements.fwd;
 
+
   // Поля «сверху» и «слева» не могут быть отрицательными.
   partLeft.min = 0;
   partTop.min = 0;
@@ -320,17 +324,28 @@
    * Метод валидации элементов формы
    *
    */
-  var validateForm = function() {
+  var validateForm = function(event) {
 
     if(currentResizer) {
     // Параметры исходного изображения
       widthImage = currentResizer._image.naturalWidth;
       heightImage = currentResizer._image.naturalHeight;
 
-      //Проверяем заполнены ли поля, преобразуем к числовому виду
-      partLeft.value = parseInt(partLeft.value, 10) || 0;
-      partTop.value = parseInt(partTop.value, 10) || 0;
-      sideSize.value = parseInt(sideSize.value, 10) || 0;
+      // Масштабирование рамки
+      if (event.target.name === 'size') {
+        window.resizer.setConstraint((window.resizer._container.width - parseInt(event.target.value, 10)) / 2,
+          (window.resizer._container.height - parseInt(event.target.value, 10)) / 2, parseInt(event.target.value, 10));
+      }
+      if(event.target.name === 'x') {
+        window.resizer.setConstraint(parseInt(event.target.value, 10));
+        window.resizer.moveConstraint(parseInt(event.target.value, 10) - parseInt(partLeft.value, 10));
+        //partLeft.value = parseInt(event.target.value, 10) || 0;
+      }
+      if(event.target.name === 'y') {
+        window.resizer.setConstraint(parseInt(partLeft.value, 10), parseInt(event.target.value, 10));
+        window.resizer.moveConstraint(parseInt(event.target.value, 10) - parseInt(partTop.value, 10));
+        //partTop.value = parseInt(event.target.value, 10) || 0;
+      }
 
       // Сумма значений полей «слева» и «сторона»
       var sizeTopLeft = (parseInt(partLeft.value, 10) + parseInt(partTop.value, 10));
@@ -366,20 +381,36 @@
 
   validateForm();
 
-  // Навешиваем события DOM level 0 на текстовые поля ввода
-  partLeft.oninput = function() {
-    validateForm();
+  // Навешиваем события DOM level 2 на текстовые поля ввода
+  partLeft.addEventListener('input', validateForm);
+  partTop.addEventListener('input', validateForm);
+  sideSize.addEventListener('input', validateForm);
+
+
+  var movePhoto = function() {
+
+    // Определяем форму для валидации
+    if (!frmUploadResize) {
+      return;
+    }
+    var square = window.resizer.getConstraint() || {x: 0, y: 0, size: 0};
+    //Определяем элементы формы
+    // Определяем поля ввода для валидации на форме
+    // Положение кадра слева
+    frmUploadResize.elements.x.value = parseInt(square.x, 10) || 0;
+    // Положение кадра слева
+    frmUploadResize.elements.y.value = parseInt(square.y, 10) || 0;
+    //  Размер стороны квадрата который будет вырезан из изображения
+    frmUploadResize.elements.size.value = square.side;
+
   };
 
-  partTop.oninput = function() {
-    validateForm();
-  };
-
-  sideSize.oninput = function() {
-    validateForm();
-  };
+  // Обработчик на ресайз окна
+  window.addEventListener('resizerchange', movePhoto);
 
   cleanupResizer();
   updateBackground();
+
+
 
 })();

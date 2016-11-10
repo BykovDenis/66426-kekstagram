@@ -82,6 +82,7 @@ filters.addEventListener('click', function(event) {
     params.from = 0;
     params.to = COUNT_PHOTO_BY_SCROLL;
     params.filter = event.target.id;
+
     document.querySelector('.pictures').innerHTML = '';
     loadJSONData(url, params, renderGallery);
   }
