@@ -14,7 +14,7 @@ module.exports = function(url, params, callback) {
     } catch(e) {
       console.log(e);
     }
-    return false;
+
   };
 
   params.from = params.from || 0;
