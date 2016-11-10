@@ -41,13 +41,18 @@ var renderGallery = function(data) {
 
   // Скрываем фильтры
 var filters = document.querySelector('.filters');
-filters.classList.add('hidden');
+
+// Смотрим есть ли в localStorage что-нибудь
+var filterID = localStorage.getItem('filterID') || 'filter-popular';
+if (filterID) {
+  filters.elements[filterID].checked = 'true';
+}
 
 var url = 'api/pictures';
 var params = {
   from: 0,
   to: COUNT_PHOTO_BY_SCROLL,
-  filter: 'filter-popular',
+  filter: filterID,
 };
 loadJSONData(url, params, renderGallery);
 
