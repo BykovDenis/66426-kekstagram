@@ -1,5 +1,5 @@
 'use strict';
 
-require('../pictures');
+require('./pictures');
 require('./resizer');
 require('./upload');
