@@ -75,7 +75,7 @@ function isScrolling() {
 var curTime;
 var throttle = function(callback, timeout) {
   return function() {
-    if (!window.hasOwnProperty('curTime')) {
+    if (!curTime) {
       curTime = Date.now();
     }
     if(Date.now() - curTime >= timeout) {
