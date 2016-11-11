@@ -2,7 +2,6 @@
 
 'use strict';
 
-//var getPage = require('../../bin/data/get-page');
 
 module.exports = function(url, params, callback) {
 
