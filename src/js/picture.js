@@ -34,10 +34,12 @@ var Picture = function(card, index, element) {
   };
 
   var onclick = function(event) {
-    //event.preventDefault();
-    //gallery.show(index);
-    window.location.hash = '#' + event.target.src.replace(document.location.origin+'/', '');
+    event.preventDefault();
+    window.location.hash = '#photo/' + event.target.src.replace(document.location.origin + '/', '');
   };
+
+  var galleryVisible = gallery.visible.bind(gallery);
+  window.addEventListener('hashchange', galleryVisible);
 
   this.img.onerror = error;
 
