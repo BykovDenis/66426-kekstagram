@@ -152,7 +152,6 @@
           cleanupResizer();
 
           currentResizer = new Resizer(fileReader.result);
-
           currentResizer.setElement(resizeForm);
           uploadMessage.classList.add('invisible');
 
@@ -331,8 +330,6 @@
       var element = event.target;
       var containerWidth = currentResizer._container.width;
       var containerHeight = currentResizer._container.height;
-
-
       // Масштабирование рамки
       if (element.name === 'size') {
         currentResizer.setConstraint((containerWidth - parseInt(element.value, 10)) / 2,
