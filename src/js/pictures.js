@@ -72,8 +72,8 @@ function isScrolling() {
   return footerPosition.top - window.innerHeight - 100 <= 0;
 }
 
-var curTime;
 var throttle = function(callback, timeout) {
+  var curTime;
   return function() {
     if (!curTime) {
       curTime = Date.now();
