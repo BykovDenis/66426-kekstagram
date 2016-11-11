@@ -6,7 +6,7 @@ var gallery = require('./gallery');
 var filtersData = require('../../bin/data/filter');
 var arrFilters = ['filter-popular', 'filter-new', 'filter-discussed'];
 
-var THROTTLE_DELAY = 5000;
+var THROTTLE_DELAY = 100;
 var COUNT_PHOTO_BY_SCROLL = 12;
 
 var renderGallery = function(data) {
