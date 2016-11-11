@@ -4,6 +4,7 @@ var loadJSONData = require('./load');
 var Picture = require('./picture');
 var gallery = require('./gallery');
 var filtersData = require('../../bin/data/filter');
+var arrFilters = ['filter-popular', 'filter-new', 'filter-discussed'];
 
 var THROTTLE_DELAY = 100;
 var COUNT_PHOTO_BY_SCROLL = 12;
@@ -42,9 +43,16 @@ var renderGallery = function(data) {
   // Скрываем фильтры
 var filters = document.querySelector('.filters');
 
+// Валидация выбранного фильтра
+var validationFilter = function(filterID){
+  return arrFilters.some(function(elem){
+    if(elem === filterID) return true;
+  })
+}
+
 // Смотрим есть ли в localStorage что-нибудь
 var filterID = localStorage.getItem('filterID') || 'filter-popular';
-if (filterID) {
+if (validationFilter(filterID)) {
   filters.elements[filterID].checked = 'true';
 }
 

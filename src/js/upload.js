@@ -330,21 +330,25 @@
     // Параметры исходного изображения
       widthImage = currentResizer._image.naturalWidth;
       heightImage = currentResizer._image.naturalHeight;
+      var element = event.target;
+      var containerWidth = resizer._container.width;
+      var containerHeight = resizer._container.height;
+
 
       // Масштабирование рамки
-      if (event.target.name === 'size') {
-        window.resizer.setConstraint((window.resizer._container.width - parseInt(event.target.value, 10)) / 2,
-          (window.resizer._container.height - parseInt(event.target.value, 10)) / 2, parseInt(event.target.value, 10));
+      if (element.name === 'size') {
+        resizer.setConstraint((containerWidth - parseInt(element.value, 10)) / 2,
+          (containerHeight - parseInt(element.value, 10)) / 2, parseInt(element.value, 10));
       }
-      if(event.target.name === 'x') {
-        window.resizer.setConstraint(parseInt(event.target.value, 10));
-        window.resizer.moveConstraint(parseInt(event.target.value, 10) - parseInt(partLeft.value, 10));
-        //partLeft.value = parseInt(event.target.value, 10) || 0;
+      if(element.name === 'x') {
+        resizer.setConstraint(parseInt(element.value, 10));
+        resizer.moveConstraint(parseInt(element.value, 10) - parseInt(partLeft.value, 10));
+        //partLeft.value = parseInt(element.value, 10) || 0;
       }
-      if(event.target.name === 'y') {
-        window.resizer.setConstraint(parseInt(partLeft.value, 10), parseInt(event.target.value, 10));
-        window.resizer.moveConstraint(parseInt(event.target.value, 10) - parseInt(partTop.value, 10));
-        //partTop.value = parseInt(event.target.value, 10) || 0;
+      if(element.name === 'y') {
+        resizer.setConstraint(parseInt(partLeft.value, 10), parseInt(element.value, 10));
+        resizer.moveConstraint(parseInt(element.value, 10) - parseInt(partTop.value, 10));
+        //partTop.value = parseInt(element.value, 10) || 0;
       }
 
       // Сумма значений полей «слева» и «сторона»
@@ -393,12 +397,12 @@
     if (!frmUploadResize) {
       return;
     }
-    var square = window.resizer.getConstraint() || {x: 0, y: 0, size: 0};
+    var square = resizer.getConstraint() || {};
     //Определяем элементы формы
     // Определяем поля ввода для валидации на форме
     // Положение кадра слева
     frmUploadResize.elements.x.value = parseInt(square.x, 10) || 0;
-    // Положение кадра слева
+    // Положение кадра сверху
     frmUploadResize.elements.y.value = parseInt(square.y, 10) || 0;
     //  Размер стороны квадрата который будет вырезан из изображения
     frmUploadResize.elements.size.value = square.side;
