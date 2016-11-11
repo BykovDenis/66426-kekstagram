@@ -14,6 +14,7 @@ module.exports = function(list, filterID) {
     return a.comments <= b.comments;
   };
 
+
   if (filterID === 'filter-popular') {
     return list.sort(sortByLikes);
   }

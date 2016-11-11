@@ -2,6 +2,7 @@
 
 'use strict';
 
+
 module.exports = function(url, params, callback) {
 
   var xhr = new XMLHttpRequest();

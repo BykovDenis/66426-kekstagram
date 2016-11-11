@@ -40,7 +40,7 @@ var renderGallery = function(data) {
 
 };
 
-  // Скрываем фильтры
+// Скрываем фильтры
 var filters = document.querySelector('.filters');
 
 // Валидация выбранного фильтра
@@ -101,6 +101,9 @@ window.addEventListener('scroll', optimizedScroll);
 window.removeEventListener('scroll', optimizedScroll);
 
 
+// Обработчик событий на скроллинг экрана
+window.addEventListener('scroll', optimizedScroll);
+window.removeEventListener('scroll', optimizedScroll);
 
 // Обрабатываем фильтры
 filters.addEventListener('click', function(event) {
@@ -109,7 +112,8 @@ filters.addEventListener('click', function(event) {
     params.from = 0;
     params.to = COUNT_PHOTO_BY_SCROLL;
     params.filter = event.target.id;
-
+    // Записываем выбранный фильтр
+    localStorage.setItem('filterID', event.target.id);
     document.querySelector('.pictures').innerHTML = '';
     loadJSONData(url, params, renderGallery);
   }
