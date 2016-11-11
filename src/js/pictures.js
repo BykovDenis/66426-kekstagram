@@ -4,6 +4,7 @@ var loadJSONData = require('./load');
 var Picture = require('./picture');
 var gallery = require('./gallery');
 var filtersData = require('../../bin/data/filter');
+var arrFilters = ['filter-popular', 'filter-new', 'filter-discussed'];
 
 var THROTTLE_DELAY = 100;
 var COUNT_PHOTO_BY_SCROLL = 12;
@@ -41,13 +42,25 @@ var renderGallery = function(data) {
 
   // Скрываем фильтры
 var filters = document.querySelector('.filters');
-filters.classList.add('hidden');
+
+// Валидация выбранного фильтра
+var validationFilter = function(filterID) {
+  return arrFilters.some(function(elem) {
+    return elem === filterID;
+  });
+};
+
+// Смотрим есть ли в localStorage что-нибудь
+var filterID = localStorage.getItem('filterID') || 'filter-popular';
+if (validationFilter(filterID)) {
+  filters.elements[filterID].checked = 'true';
+}
 
 var url = 'api/pictures';
 var params = {
   from: 0,
   to: COUNT_PHOTO_BY_SCROLL,
-  filter: 'filter-popular',
+  filter: filterID,
 };
 loadJSONData(url, params, renderGallery);
 
