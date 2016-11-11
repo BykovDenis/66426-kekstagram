@@ -44,11 +44,11 @@ var renderGallery = function(data) {
 var filters = document.querySelector('.filters');
 
 // Валидация выбранного фильтра
-var validationFilter = function(filterID){
-  return arrFilters.some(function(elem){
-    if(elem === filterID) return true;
-  })
-}
+var validationFilter = function(filterID) {
+  return arrFilters.some(function(elem) {
+    return elem === filterID;
+  });
+};
 
 // Смотрим есть ли в localStorage что-нибудь
 var filterID = localStorage.getItem('filterID') || 'filter-popular';

@@ -53,6 +53,11 @@
   };
 
   /**
+   * для работы с изображением
+   */
+  var resizer;
+
+  /**
    * Ставит одну из трех случайных картинок на фон формы загрузки.
    */
   var updateBackground = function() {
@@ -153,7 +158,7 @@
           cleanupResizer();
 
           currentResizer = new Resizer(fileReader.result);
-          window.resizer = currentResizer;
+          resizer = currentResizer;
 
           currentResizer.setElement(resizeForm);
           uploadMessage.classList.add('invisible');
