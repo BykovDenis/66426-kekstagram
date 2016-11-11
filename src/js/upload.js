@@ -51,12 +51,7 @@
       currentResizer = null;
     }
   };
-
-  /**
-   * для работы с изображением
-   */
-  var resizer;
-
+  
   /**
    * Ставит одну из трех случайных картинок на фон формы загрузки.
    */
@@ -158,7 +153,6 @@
           cleanupResizer();
 
           currentResizer = new Resizer(fileReader.result);
-          resizer = currentResizer;
 
           currentResizer.setElement(resizeForm);
           uploadMessage.classList.add('invisible');
@@ -336,23 +330,23 @@
       widthImage = currentResizer._image.naturalWidth;
       heightImage = currentResizer._image.naturalHeight;
       var element = event.target;
-      var containerWidth = resizer._container.width;
-      var containerHeight = resizer._container.height;
+      var containerWidth = currentResizer._container.width;
+      var containerHeight = currentResizer._container.height;
 
 
       // Масштабирование рамки
       if (element.name === 'size') {
-        resizer.setConstraint((containerWidth - parseInt(element.value, 10)) / 2,
+        currentResizer.setConstraint((containerWidth - parseInt(element.value, 10)) / 2,
           (containerHeight - parseInt(element.value, 10)) / 2, parseInt(element.value, 10));
       }
       if(element.name === 'x') {
-        resizer.setConstraint(parseInt(element.value, 10));
-        resizer.moveConstraint(parseInt(element.value, 10) - parseInt(partLeft.value, 10));
+        currentResizer.setConstraint(parseInt(element.value, 10));
+        currentResizer.moveConstraint(parseInt(element.value, 10) - parseInt(partLeft.value, 10));
         //partLeft.value = parseInt(element.value, 10) || 0;
       }
       if(element.name === 'y') {
-        resizer.setConstraint(parseInt(partLeft.value, 10), parseInt(element.value, 10));
-        resizer.moveConstraint(parseInt(element.value, 10) - parseInt(partTop.value, 10));
+        currentResizer.setConstraint(parseInt(partLeft.value, 10), parseInt(element.value, 10));
+        currentResizer.moveConstraint(parseInt(element.value, 10) - parseInt(partTop.value, 10));
         //partTop.value = parseInt(element.value, 10) || 0;
       }
 
@@ -402,7 +396,7 @@
     if (!frmUploadResize) {
       return;
     }
-    var square = resizer.getConstraint() || {};
+    var square = currentResizer.getConstraint() || {};
     //Определяем элементы формы
     // Определяем поля ввода для валидации на форме
     // Положение кадра слева
