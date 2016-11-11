@@ -34,9 +34,9 @@ var Picture = function(card, index, element) {
   };
 
   var onclick = function(event) {
-    //event.preventDefault();
-    //gallery.show(index);
-    window.location.hash = '#' + event.target.src.replace(document.location.origin+'/', '');
+    event.preventDefault();
+    gallery.show(index);
+    //window.location.hash = '#' + event.target.src.replace(document.location.origin+'/', '');
   };
 
   this.img.onerror = error;

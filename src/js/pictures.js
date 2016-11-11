@@ -73,23 +73,19 @@ function isScrolling() {
 }
 
 var throttle = function(callback, timeout) {
-  if (!window.hasOwnProperty('curTime')) {
-    window.curTime = Date.now();
-  }
-  console.log(Date.now(), window.curTime);
-  if (Date.now() - window.curTime >= timeout) {
-    callback();
-    window.curTime = Date.now();
-  }
-
+  return callback(timeout);
 };
 
 // Функция для подгрузки фото
-function getScrolling() {
-  if(isScrolling) {
+function getScrolling(timeout) {
+  if (!window.hasOwnProperty('curTime')) {
+    window.curTime = Date.now();
+  }
+  if(isScrolling && Date.now() - window.curTime >= timeout) {
     params.from = params.to;
     params.to += COUNT_PHOTO_BY_SCROLL;
     loadJSONData(url, params, renderGallery);
+    window.curTime = Date.now();
   }
 }
 
