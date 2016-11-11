@@ -99,7 +99,6 @@ var optimizedScroll = throttle(getScrolling, THROTTLE_DELAY);
 window.addEventListener('scroll', optimizedScroll);
 window.removeEventListener('scroll', optimizedScroll);
 
-
 // Обрабатываем фильтры
 filters.addEventListener('click', function(event) {
   if(event.target.classList.contains('filters-radio')) {
