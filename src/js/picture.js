@@ -36,6 +36,7 @@ var Picture = function(card, index, element) {
   var onclick = function(event) {
     event.preventDefault();
     window.location.hash = '#photo/' + event.target.src.replace(document.location.origin + '/', '');
+    //gallery.show(index);
   };
 
   var galleryVisible = gallery.visible.bind(gallery);

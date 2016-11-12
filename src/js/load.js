@@ -2,7 +2,6 @@
 
 'use strict';
 
-//var getPage = require('../../bin/data/get-page');
 
 module.exports = function(url, params, callback) {
 
@@ -22,7 +21,7 @@ module.exports = function(url, params, callback) {
   params.to = params.to || 12;
   params.filter = params.filter || '';
   var urlWithParams = url + '?from=' + params.from + '&to=' + params.to + '&filter=' + params.filter;
-  xhr.open('GET', urlWithParams, true);
+  xhr.open('GET', urlWithParams);
   xhr.send();
 
 };

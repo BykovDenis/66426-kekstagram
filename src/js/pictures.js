@@ -6,7 +6,7 @@ var gallery = require('./gallery');
 var filtersData = require('../../bin/data/filter');
 var arrFilters = ['filter-popular', 'filter-new', 'filter-discussed'];
 
-var THROTTLE_DELAY = 5000;
+var THROTTLE_DELAY = 100;
 var COUNT_PHOTO_BY_SCROLL = 12;
 
 var renderGallery = function(data) {
@@ -53,7 +53,6 @@ var validationFilter = function(filterID) {
 // Смотрим есть ли в localStorage что-нибудь
 var filterID = localStorage.getItem('filterID') || 'filter-popular';
 if (validationFilter(filterID)) {
-
   filters.elements[filterID].checked = 'true';
 }
 
@@ -74,15 +73,16 @@ function isScrolling() {
 }
 
 var throttle = function(callback, timeout) {
-  if (!window.hasOwnProperty('curTime')) {
-    window.curTime = Date.now();
-  }
-  console.log(Date.now(), window.curTime);
-  if (Date.now() - window.curTime >= timeout) {
-    callback();
-    window.curTime = Date.now();
-  }
-
+  var curTime;
+  return function() {
+    if (!curTime) {
+      curTime = Date.now();
+    }
+    if(Date.now() - curTime >= timeout) {
+      callback();
+      curTime = Date.now();
+    }
+  };
 };
 
 // Функция для подгрузки фото
@@ -95,6 +95,10 @@ function getScrolling() {
 }
 
 var optimizedScroll = throttle(getScrolling, THROTTLE_DELAY);
+
+// Обработчик событий на скроллинг экрана
+window.addEventListener('scroll', optimizedScroll);
+window.removeEventListener('scroll', optimizedScroll);
 
 // Обработчик событий на скроллинг экрана
 window.addEventListener('scroll', optimizedScroll);
