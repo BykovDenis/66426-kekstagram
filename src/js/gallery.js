@@ -12,61 +12,50 @@ var Gallery = function() {
   this.galleryOverlayClose = document.querySelector('.gallery-overlay-close');
   this.galleryOverlayImage = document.querySelector('.gallery-overlay-image');
 
+  this.galleryOverlayClose.onclick = this.hide.bind(this);
+  this.galleryOverlayImage.onclick = this.setActivePicture.bind(this);
+  this.galleryOverlayImage.onerror = this.galleryOverlayImageError.bind(this);
+  this.galleryOverlayImage.onload = this.galleryOverlayImageLoad.bind(this);
+
 };
 
-Gallery.prototype = {
-  setPictures: function(data) {
-    this.pictures = data;
-  },
-  show: function(index) {
+Gallery.prototype.galleryOverlayImageError = function() {
+  this.galleryOverlayImage.classList.add('picture-load-failure');
+};
 
-    var that = this;
+Gallery.prototype.galleryOverlayImageLoad = function() {
+  this.galleryOverlayImage.classList.remove('picture-load-failure');
+};
 
-    this.galleryOverlayClose.onclick = function() {
-      that.hide();
-    };
+Gallery.prototype.setPictures = function(data) {
+  this.pictures = data;
+};
 
-    this.galleryOverlayImage.onclick = function() {
-      that.setActivePicture(that.activePicture);
-    };
+Gallery.prototype.show = function(index) {
+  this.galleryOverlay.classList.remove('invisible');
+  this.activePicture = index;
+  this.setActivePicture();
+};
 
-    this.galleryOverlay.classList.remove('invisible');
-    this.setActivePicture(index);
+Gallery.prototype.hide = function() {
+  this.galleryOverlay.classList.add('invisible');
+  this.galleryOverlayClose.onclick = null;
+  this.galleryOverlayImage.onclick = null;
+  this.galleryOverlayImage.onerror = null;
+};
 
-  },
-  hide: function() {
-    this.galleryOverlay.classList.add('invisible');
+Gallery.prototype.setActivePicture = function() {
 
-    this.galleryOverlayClose.onclick = null;
-    this.galleryOverlayImage.onclick = null;
-    this.galleryOverlayImage.onerror = null;
-
-  },
-  setActivePicture: function(index) {
-
-    this.activePicture = index;
-    if (this.activePicture >= this.pictures.length) {
-      this.activePicture = 0;
-    }
-
-    var that = this;
-
-    this.galleryOverlayImage.onerror = function() {
-      that.galleryOverlayImage.classList.add('picture-load-failure');
-    };
-
-    this.galleryOverlayImage.onload = function() {
-      that.galleryOverlayImage.classList.remove('picture-load-failure');
-    };
-
-    this.galleryOverlayImage.src = this.pictures[this.activePicture].url;
-
-    document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
-    document.querySelector('.comments-count').innerText = this.pictures[this.activePicture].comments;
-
-    this.activePicture++;
-
+  if (this.activePicture >= this.pictures.length) {
+    this.activePicture = 0;
   }
+
+  this.galleryOverlayImage.src = this.pictures[this.activePicture].url;
+
+  document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
+  document.querySelector('.comments-count').innerText = this.pictures[this.activePicture].comments;
+
+  this.activePicture++;
 };
 
 module.exports = new Gallery();
