@@ -12,81 +12,74 @@ var Gallery = function() {
   this.galleryOverlayClose = document.querySelector('.gallery-overlay-close');
   this.galleryOverlayImage = document.querySelector('.gallery-overlay-image');
 
+  this.galleryOverlayClose.onclick = this.hide.bind(this);
+  this.galleryOverlayImage.onclick = this.setActivePicture.bind(this);
+  this.galleryOverlayImage.onerror = this.galleryOverlayImageError.bind(this);
+  this.galleryOverlayImage.onload = this.galleryOverlayImageLoad.bind(this);
+
 };
 
-Gallery.prototype = {
-  setPictures: function(data) {
-    this.pictures = data;
-  },
-  visible: function(index) {
+Gallery.prototype.galleryOverlayImageError = function() {
+  this.galleryOverlayImage.classList.add('picture-load-failure');
+};
 
-    var that = this;
+Gallery.prototype.galleryOverlayImageLoad = function() {
+  this.galleryOverlayImage.classList.remove('picture-load-failure');
+};
 
-    this.galleryOverlayImage.onclick = function() {
-      that.setActivePicture(that.activePicture);
-    };
+Gallery.prototype.setPictures = function(data) {
+  this.pictures = data;
+};
 
-    if (window.location.hash.replace(/#photo\/(\S+)/, '') !== window.location.hash) {
-      this.galleryOverlay.classList.remove('invisible');
-      this.setActivePicture(index);
-    }
-    else {
-      this.hide();
-    }
-
-  },
-  hide: function() {
-    window.location.hash = '';
-    //this.galleryOverlay.classList.add('invisible');
-
-    this.galleryOverlayClose.onclick = null;
-    this.galleryOverlayImage.onclick = null;
-    this.galleryOverlayImage.onerror = null;
-
-  },
-  getPhotoByHash: function() {
-    var indexPhoto;
-    this.pictures.map(function(elem, index) {
-
-      //String.prototype.match(RegExp):?Array<string>
-      ///#photo\/(\S+)/
-      if(window.location.hash.replace('#photo/', '') === elem.url) {
-        indexPhoto = index;
-        return indexPhoto;
-      }
-    });
-    return indexPhoto;
-  },
-  setActivePicture: function(index) {
-
-    if ((parseInt(index, 10)).toString() === index) {
-      this.activePicture = index;
-    }
-    else {
-      this.activePicture = this.getPhotoByHash();
-    }
-
-    if (this.activePicture >= this.pictures.length) {
-      this.activePicture = 0;
-    }
-
-    var that = this;
-
-    this.galleryOverlayImage.onerror = function() {
-      that.galleryOverlayImage.classList.add('picture-load-failure');
-    };
-
-    this.galleryOverlayImage.onload = function() {
-      that.galleryOverlayImage.classList.remove('picture-load-failure');
-    };
-
-    this.galleryOverlayImage.src = this.pictures[this.activePicture].url;
-    document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
-    document.querySelector('.comments-count').innerText = this.pictures[this.activePicture].comments;
-
-    this.activePicture++;
-
+Gallery.prototype.visible = function(index) {
+  if (window.location.hash.replace(/#photo\/(\S+)/, '') !== window.location.hash) {
+    this.galleryOverlay.classList.remove('invisible');
+    this.changePhoto(index);
+  } else {
+    this.galleryOverlay.classList.add('invisible');
   }
+};
+
+Gallery.prototype.hide = function() {
+  if(window.location.hash) {
+    window.location.hash = null;
+    this.activePicture = 0;
+  }
+  this.galleryOverlayClose.onclick = null;
+  this.galleryOverlayImage.onclick = null;
+  this.galleryOverlayImage.onerror = null;
+};
+
+Gallery.prototype.getPhotoByHash = function() {
+  var indexPhoto;
+  this.pictures.map(function(elem, index) {
+    if(window.location.hash.replace('#photo/', '') === elem.url) {
+      indexPhoto = index;
+      return indexPhoto;
+    }
+  });
+  return indexPhoto;
+};
+
+Gallery.prototype.changePhoto = function(index) {
+  if ((parseInt(index, 10)).toString() === index) {
+    this.activePicture = index;
+  } else {
+    this.activePicture = this.getPhotoByHash();
+  }
+
+  this.galleryOverlayImage.src = this.pictures[this.activePicture].url;
+
+  document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
+  document.querySelector('.comments-count').innerText = this.pictures[this.activePicture].comments;
+  this.activePicture++;
+  if (this.activePicture >= this.pictures.length) {
+    this.activePicture = 0;
+  }
+};
+
+Gallery.prototype.setActivePicture = function() {
+  window.location.hash = '#photo/' + this.pictures[this.activePicture].url.replace(document.location.origin + '/', '');
 };
 
 module.exports = new Gallery();
