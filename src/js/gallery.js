@@ -57,6 +57,7 @@ Gallery.prototype.getPhotoByHash = function() {
       indexPhoto = index;
       return indexPhoto;
     }
+    return 0;
   });
   return indexPhoto;
 };
