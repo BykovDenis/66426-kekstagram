@@ -2,6 +2,8 @@
 'use strict';
 
 var gallery = require('./gallery');
+var inherit = require('./inherit');
+var BaseComponent = require('./base-component');
 
 var Picture = function(card, index, element) {
 
@@ -27,15 +29,21 @@ var Picture = function(card, index, element) {
   this.element.onclick = this.click.bind(this);
   this.img.width = this.IMG_SIDE;
   this.img.height = this.IMG_SIDE;
-  this.img.src = this.data.card.url;
 
   this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
   this.hashchange();
+  this.imgSource(this.img, this.data.card.url);
+};
+
+Picture.prototype = inherit(BaseComponent);
+
+Picture.prototype.imgSource = function(el, url) {
+  BaseComponent.prototype.imgSource.call(this, el, url);
 };
 
 Picture.prototype.hashchange = function() {
   var galleryVisible = gallery.visible.bind(gallery);
-  window.addEventListener('hashchange', galleryVisible);
+  BaseComponent.prototype.hashchange.call(this, galleryVisible);
 };
 
 Picture.prototype.remove = function() {

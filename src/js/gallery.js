@@ -1,5 +1,8 @@
 'use strict';
 
+var BaseComponent = require('./base-component');
+var inherit = require('./inherit');
+
 // Отвечает за отрисовку фотографий
 var Gallery = function() {
 
@@ -17,6 +20,12 @@ var Gallery = function() {
   this.galleryOverlayImage.onerror = this.galleryOverlayImageError.bind(this);
   this.galleryOverlayImage.onload = this.galleryOverlayImageLoad.bind(this);
 
+};
+
+Gallery.prototype = inherit(BaseComponent);
+
+Gallery.prototype.imgSource = function(el, url) {
+  BaseComponent.prototype.imgSource.call(this, el, url);
 };
 
 Gallery.prototype.galleryOverlayImageError = function() {
@@ -41,8 +50,7 @@ Gallery.prototype.visible = function(index) {
 };
 
 Gallery.prototype.hide = function() {
-  if(window.location.hash) {
-    window.location.hash = '';
+  if(BaseComponent.prototype.clearURLHash()) {
     this.activePicture = 0;
   }
   this.galleryOverlayClose.onclick = null;
@@ -69,7 +77,7 @@ Gallery.prototype.changePhoto = function(index) {
     this.activePicture = this.getPhotoByHash();
   }
 
-  this.galleryOverlayImage.src = this.pictures[this.activePicture].url;
+  this.imgSource(this.galleryOverlayImage, this.pictures[this.activePicture].url);
 
   document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
   document.querySelector('.comments-count').innerText = this.pictures[this.activePicture].comments;
