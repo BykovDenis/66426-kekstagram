@@ -44,8 +44,10 @@ Picture.prototype.remove = function() {
 
 Picture.prototype.click = function(event) {
   event.preventDefault();
+  if(event.target.tagName === 'IMG') {
   //gallery.show(this.data.index);
-  window.location.hash = '#photo/' + event.target.src.replace(document.location.origin + '/', '');
+    window.location.hash = '#photo/' + event.target.src.replace(document.location.origin + '/', '');
+  }
 };
 
 Picture.prototype.error = function() {
