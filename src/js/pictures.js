@@ -100,7 +100,6 @@ var optimizedScroll = throttle(getScrolling, THROTTLE_DELAY);
 window.addEventListener('scroll', optimizedScroll);
 window.removeEventListener('scroll', optimizedScroll);
 
-
 // Обработчик событий на скроллинг экрана
 window.addEventListener('scroll', optimizedScroll);
 window.removeEventListener('scroll', optimizedScroll);

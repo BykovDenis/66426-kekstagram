@@ -31,31 +31,56 @@ Gallery.prototype.setPictures = function(data) {
   this.pictures = data;
 };
 
-Gallery.prototype.show = function(index) {
-  this.galleryOverlay.classList.remove('invisible');
-  this.activePicture = index;
-  this.setActivePicture();
+Gallery.prototype.visible = function(index) {
+  if (window.location.hash.replace(/#photo\/(\S+)/, '') !== window.location.hash) {
+    this.galleryOverlay.classList.remove('invisible');
+    this.changePhoto(index);
+  } else {
+    this.galleryOverlay.classList.add('invisible');
+  }
 };
 
 Gallery.prototype.hide = function() {
-  this.galleryOverlay.classList.add('invisible');
+  if(window.location.hash) {
+    window.location.hash = '';
+    this.activePicture = 0;
+  }
   this.galleryOverlayClose.onclick = null;
   this.galleryOverlayImage.onclick = null;
   this.galleryOverlayImage.onerror = null;
 };
 
-Gallery.prototype.setActivePicture = function() {
+Gallery.prototype.getPhotoByHash = function() {
+  var indexPhoto;
+  this.pictures.map(function(elem, index) {
+    if(window.location.hash.replace('#photo/', '') === elem.url) {
+      indexPhoto = index;
+      return indexPhoto;
+    }
+    return 0;
+  });
+  return indexPhoto;
+};
 
-  if (this.activePicture >= this.pictures.length) {
-    this.activePicture = 0;
+Gallery.prototype.changePhoto = function(index) {
+  if ((parseInt(index, 10)).toString() === index) {
+    this.activePicture = index;
+  } else {
+    this.activePicture = this.getPhotoByHash();
   }
 
   this.galleryOverlayImage.src = this.pictures[this.activePicture].url;
 
   document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
   document.querySelector('.comments-count').innerText = this.pictures[this.activePicture].comments;
-
   this.activePicture++;
+  if (this.activePicture >= this.pictures.length) {
+    this.activePicture = 0;
+  }
+};
+
+Gallery.prototype.setActivePicture = function() {
+  window.location.hash = '#photo/' + this.pictures[this.activePicture].url.replace(document.location.origin + '/', '');
 };
 
 module.exports = new Gallery();
