@@ -30,7 +30,7 @@ var Picture = function(card, index, element) {
   this.img.height = this.IMG_SIDE;
   this.img.src = this.data.card.url;
 
-  this.timeOutLoading = setTimeout(this.error, this.IMAGE_LOAD_TIMEOUT);
+  this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
 
 };
 
