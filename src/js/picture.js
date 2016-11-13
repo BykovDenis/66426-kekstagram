@@ -6,8 +6,8 @@ var gallery = require('./gallery');
 var Picture = function(card, index, element) {
 
   // 10 время на загрузку картинки
-  var IMAGE_LOAD_TIMEOUT = 10000;
-  var IMG_SIDE = 182;
+  this.IMAGE_LOAD_TIMEOUT = 10000;
+  this.IMG_SIDE = 182;
 
   this.element = element;
 
@@ -21,39 +21,38 @@ var Picture = function(card, index, element) {
 
   // Создаем картинку
   this.img = new Image();
-  var that = this;
 
-  this.img.onload = function() {
-    clearTimeout(timeOutLoading);
-    var currentImg = that.element.querySelector('img');
-    that.element.replaceChild(this, currentImg);
-  };
+  this.img.onerror = this.error.bind(this);
+  this.img.onload = this.load.bind(this);
+  this.element.onclick = this.click.bind(this);
 
-  var error = function() {
-    that.element.classList.add('picture-load-failure');
-  };
-
-  var onclick = function(event) {
-    event.preventDefault();
-    gallery.show(index);
-  };
-
-  this.img.onerror = error;
-
-  this.img.width = IMG_SIDE;
-  this.img.height = IMG_SIDE;
+  this.img.width = this.IMG_SIDE;
+  this.img.height = this.IMG_SIDE;
   this.img.src = this.data.card.url;
 
-  this.element.onclick = onclick;
-
-  var timeOutLoading = setTimeout(error, IMAGE_LOAD_TIMEOUT);
+  this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
 
 };
 
-Picture.prototype = {
-  remove: function() {
-    this.element.onclick = null;
-  },
+Picture.prototype.remove = function() {
+  this.element.onclick = null;
+};
+
+Picture.prototype.click = function(event) {
+  event.preventDefault();
+  gallery.show(this.data.index);
+};
+
+Picture.prototype.error = function() {
+  if(this.element) {
+    this.element.classList.add('picture-load-failure');
+  }
+};
+
+Picture.prototype.load = function() {
+  clearTimeout(this.timeOutLoading);
+  var currentImg = this.element.querySelector('img');
+  this.element.replaceChild(this.img, currentImg);
 };
 
 module.exports = Picture;
