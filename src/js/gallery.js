@@ -31,10 +31,10 @@ Gallery.prototype.setPictures = function(data) {
   this.pictures = data;
 };
 
-Gallery.prototype.visible = function(index) {
-  if (window.location.hash.replace(/#photo\/(\S+)/, '') !== window.location.hash) {
+Gallery.prototype.visible = function(photo) {
+  if(window.location.hash.match(/#photo\/(\S+)/ig)) {
     this.galleryOverlay.classList.remove('invisible');
-    this.changePhoto(index);
+    this.changePhoto(photo);
   } else {
     this.galleryOverlay.classList.add('invisible');
   }
@@ -50,26 +50,14 @@ Gallery.prototype.hide = function() {
   this.galleryOverlayImage.onerror = null;
 };
 
-Gallery.prototype.getPhotoByHash = function() {
-  var indexPhoto;
-  this.pictures.map(function(elem, index) {
-    if(window.location.hash.replace('#photo/', '') === elem.url) {
-      indexPhoto = index;
-      return indexPhoto;
-    }
-    return 0;
-  });
-  return indexPhoto;
-};
-
-Gallery.prototype.changePhoto = function(index) {
-  if ((parseInt(index, 10)).toString() === index) {
-    this.activePicture = index;
+Gallery.prototype.changePhoto = function(photo) {
+  if ((parseInt(photo, 10)).toString() === photo) {
+    this.galleryOverlayImage.src = this.pictures[photo].url;
   } else {
-    this.activePicture = this.getPhotoByHash();
+    this.galleryOverlayImage.src = photo.newURL.replace('#photo/', '');
   }
 
-  this.galleryOverlayImage.src = this.pictures[this.activePicture].url;
+
 
   document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
   document.querySelector('.comments-count').innerText = this.pictures[this.activePicture].comments;
