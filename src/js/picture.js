@@ -30,7 +30,6 @@ var Picture = function(card, index, element) {
   this.img.src = this.data.card.url;
 
   this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
-  this.hashchange();
 };
 
 Picture.prototype.hashchange = function() {
@@ -46,6 +45,7 @@ Picture.prototype.click = function(event) {
   event.preventDefault();
   if(event.target.tagName === 'IMG') {
     window.location.hash = '#photo/' + event.target.src.replace(document.location.origin + '/', '');
+    this.hashchange();
   }
 };
 
