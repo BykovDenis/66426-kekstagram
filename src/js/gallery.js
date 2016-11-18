@@ -64,9 +64,6 @@ Gallery.prototype.hide = function() {
     window.location.hash = '';
     this.activePicture = 0;
   }
-  this.galleryOverlayClose.onclick = null;
-  this.galleryOverlayImage.onclick = null;
-  this.galleryOverlayImage.onerror = null;
 };
 
 Gallery.prototype.changePhoto = function(photo) {
@@ -81,11 +78,11 @@ Gallery.prototype.changePhoto = function(photo) {
 };
 
 Gallery.prototype.setActivePicture = function() {
-  window.location.hash = '#photo/' + this.pictures[this.activePicture].url.replace(document.location.origin + '/', '');
   this.activePicture++;
   if (this.activePicture >= this.pictures.length) {
     this.activePicture = 0;
   }
+  window.location.hash = '#photo/' + this.pictures[this.activePicture].url.replace(document.location.origin + '/', '');
 };
 
 Gallery.prototype.hashChange = function() {
