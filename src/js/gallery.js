@@ -6,16 +6,12 @@ var Gallery = function() {
   // Массив объектов для отображения
   this.pictures = [];
   // Номер текущей фотографии в галерее
-  this.activePicture = 0;
+  this.activePicture = -1;
   // Ссылки на DOM элементы
   this.galleryOverlay = document.querySelector('.gallery-overlay');
   this.galleryOverlayClose = document.querySelector('.gallery-overlay-close');
   this.galleryOverlayImage = document.querySelector('.gallery-overlay-image');
 
-  this.galleryOverlayClose.onclick = this.hide.bind(this);
-  this.galleryOverlayImage.onclick = this.setActivePicture.bind(this);
-  this.galleryOverlayImage.onerror = this.galleryOverlayImageError.bind(this);
-  this.galleryOverlayImage.onload = this.galleryOverlayImageLoad.bind(this);
   this.visible = this.visible.bind(this);
 
   this.hashChange();
@@ -46,11 +42,17 @@ Gallery.prototype.getIndexPhotoByHash = function() {
 };
 
 Gallery.prototype.visible = function() {
+
   var match = window.location.hash.match(/#photo\/(\S+)/ig);
   var photo = match ? match[0].replace('#photo/', '') : '';
   if(match) {
     this.galleryOverlay.classList.remove('invisible');
-    if (!this.activePicture) {
+    if (this.activePicture < 0) {
+      this.activePicture = 0;
+      this.galleryOverlayClose.onclick = this.hide.bind(this);
+      this.galleryOverlayImage.onclick = this.setActivePicture.bind(this);
+      this.galleryOverlayImage.onerror = this.galleryOverlayImageError.bind(this);
+      this.galleryOverlayImage.onload = this.galleryOverlayImageLoad.bind(this);
       this.activePicture = this.getIndexPhotoByHash();
     }
     this.changePhoto(photo);
@@ -62,8 +64,11 @@ Gallery.prototype.visible = function() {
 Gallery.prototype.hide = function() {
   if(window.location.hash) {
     window.location.hash = '';
-    this.activePicture = 0;
+    this.activePicture = -1;
   }
+  this.galleryOverlayClose.onclick = null;
+  this.galleryOverlayImage.onclick = null;
+  this.galleryOverlayImage.onerror = null;
 };
 
 Gallery.prototype.changePhoto = function(photo) {
