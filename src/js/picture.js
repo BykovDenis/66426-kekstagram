@@ -1,8 +1,6 @@
 // Модуль отрисовки изображения
 'use strict';
 
-var gallery = require('./gallery');
-
 var Picture = function(card, index, element) {
 
   // 10 время на загрузку картинки
@@ -32,11 +30,6 @@ var Picture = function(card, index, element) {
   this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
 };
 
-Picture.prototype.hashchange = function() {
-  var galleryVisible = gallery.visible.bind(gallery);
-  window.addEventListener('hashchange', galleryVisible);
-};
-
 Picture.prototype.remove = function() {
   this.element.onclick = null;
 };
@@ -45,7 +38,6 @@ Picture.prototype.click = function(event) {
   event.preventDefault();
   if(event.target.tagName === 'IMG') {
     window.location.hash = '#photo/' + event.target.src.replace(document.location.origin + '/', '');
-    this.hashchange();
   }
 };
 

@@ -13,7 +13,6 @@ var renderGallery = function(data) {
 
   //фильтр изображений
   var pictures = filtersData(data, params.filter);
-
   gallery.setPictures(pictures);
 
   // Ищем блок для вставки элементов с картинками
@@ -37,6 +36,7 @@ var renderGallery = function(data) {
 
   // Отображаем фильтры
   filters.classList.remove('hidden');
+  gallery.visible();
 
 };
 
@@ -118,3 +118,4 @@ filters.addEventListener('click', function(event) {
   }
 
 });
+
