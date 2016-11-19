@@ -1,5 +1,8 @@
 'use strict';
 
+var BaseComponent = require('./base-component');
+var inherit = require('./inherit');
+
 // Отвечает за отрисовку фотографий
 var Gallery = function() {
 
@@ -16,6 +19,18 @@ var Gallery = function() {
 
   this.hashChange();
 
+};
+
+Gallery.prototype = inherit(BaseComponent);
+
+
+Gallery.prototype.imgSource = function(el, url) {
+  BaseComponent.prototype.imgSource.call(this, el, url);
+};
+
+Gallery.prototype.hashChange = function() {
+  var galleryVisible = this.visible.bind(this);
+  BaseComponent.prototype.hashChange.call(this, galleryVisible);
 };
 
 Gallery.prototype.galleryOverlayImageError = function() {
@@ -48,7 +63,6 @@ Gallery.prototype.visible = function() {
   if(match) {
     this.galleryOverlay.classList.remove('invisible');
     if (this.activePicture < 0) {
-      this.activePicture = 0;
       this.galleryOverlayClose.onclick = this.hide.bind(this);
       this.galleryOverlayImage.onclick = this.setActivePicture.bind(this);
       this.galleryOverlayImage.onerror = this.galleryOverlayImageError.bind(this);
@@ -62,10 +76,8 @@ Gallery.prototype.visible = function() {
 };
 
 Gallery.prototype.hide = function() {
-  if(window.location.hash) {
-    window.location.hash = '';
-    this.activePicture = -1;
-  }
+  BaseComponent.prototype.clearURLHash();
+  this.activePicture = -1;
   this.galleryOverlayClose.onclick = null;
   this.galleryOverlayImage.onclick = null;
   this.galleryOverlayImage.onerror = null;
@@ -88,10 +100,6 @@ Gallery.prototype.setActivePicture = function() {
     this.activePicture = 0;
   }
   window.location.hash = '#photo/' + this.pictures[this.activePicture].url.replace(document.location.origin + '/', '');
-};
-
-Gallery.prototype.hashChange = function() {
-  window.addEventListener('hashchange', this.visible);
 };
 
 module.exports = new Gallery();
