@@ -3,6 +3,7 @@
 
 var inherit = require('./inherit');
 var BaseComponent = require('./base-component');
+var PhotoInfo = require('./photo-info');
 
 var Picture = function(card, index, element) {
 
@@ -17,8 +18,10 @@ var Picture = function(card, index, element) {
     index: index,
   };
 
-  this.element.querySelector('.picture-likes').innerText = this.data.card.likes;
-  this.element.querySelector('.picture-comments').innerText = this.data.card.comments;
+  this.pictureLike = this.element.querySelector('.picture-likes');
+  this.pictureComments = this.element.querySelector('.picture-comments');
+  this.pictureLike.innerText = this.data.card.likes;
+  this.pictureComments.innerText = this.data.card.comments;
 
   // Создаем картинку
   this.img = new Image();
@@ -28,6 +31,7 @@ var Picture = function(card, index, element) {
   this.element.onclick = this.click.bind(this);
   this.img.width = this.IMG_SIDE;
   this.img.height = this.IMG_SIDE;
+  this.photoInfo = new PhotoInfo(this.data.card);
 
   this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
   this.imgSource(this.img, this.data.card.url);
@@ -44,9 +48,13 @@ Picture.prototype.remove = function() {
 };
 
 Picture.prototype.click = function(event) {
+  var elem = event.target;
   event.preventDefault();
-  if(event.target.tagName === 'IMG') {
-    window.location.hash = '#photo/' + event.target.src.replace(document.location.origin + '/', '');
+  if(elem.tagName === 'IMG') {
+    window.location.hash = '#photo/' + elem.src.replace(document.location.origin + '/', '');
+  }
+  if (elem.classList.contains('picture-likes')) {
+    this.photoInfo.setLikesCount(this.pictureLike);
   }
 };
 
