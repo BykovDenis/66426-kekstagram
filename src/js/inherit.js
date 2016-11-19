@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function(Parent) {
-  var TemplateConstructor = function() {};
-  TemplateConstructor.prototype = Parent.prototype;
+  var TemporaryConstructor = function() {};
+  TemporaryConstructor.prototype = Parent.prototype;
   return new Parent();
 };

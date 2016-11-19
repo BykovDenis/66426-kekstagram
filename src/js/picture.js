@@ -1,7 +1,6 @@
 // Модуль отрисовки изображения
 'use strict';
 
-var gallery = require('./gallery');
 var inherit = require('./inherit');
 var BaseComponent = require('./base-component');
 
@@ -31,7 +30,6 @@ var Picture = function(card, index, element) {
   this.img.height = this.IMG_SIDE;
 
   this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
-  this.hashchange();
   this.imgSource(this.img, this.data.card.url);
 };
 
@@ -39,11 +37,6 @@ Picture.prototype = inherit(BaseComponent);
 
 Picture.prototype.imgSource = function(el, url) {
   BaseComponent.prototype.imgSource.call(this, el, url);
-};
-
-Picture.prototype.hashchange = function() {
-  var galleryVisible = gallery.visible.bind(gallery);
-  BaseComponent.prototype.hashchange.call(this, galleryVisible);
 };
 
 Picture.prototype.remove = function() {

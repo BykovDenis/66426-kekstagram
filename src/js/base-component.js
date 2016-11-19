@@ -7,12 +7,12 @@ BaseComponent.prototype.imgSource = function(el, url) {
 };
 
 BaseComponent.prototype.clearURLHash = function() {
-  if(window.location.hash) {
+  if (window.location.hash) {
     window.location.hash = '';
   }
 };
 
-BaseComponent.prototype.hashchange = function(el) {
+BaseComponent.prototype.hashChange = function(el) {
   window.addEventListener('hashchange', el);
 };
 
