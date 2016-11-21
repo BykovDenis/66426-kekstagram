@@ -1,6 +1,9 @@
 // Модуль отрисовки изображения
 'use strict';
 
+var inherit = require('./inherit');
+var BaseComponent = require('./base-component');
+
 var Picture = function(card, index, element) {
 
   // 10 время на загрузку картинки
@@ -30,21 +33,22 @@ var Picture = function(card, index, element) {
   this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
 };
 
+Picture.prototype = inherit(BaseComponent);
+
 Picture.prototype.remove = function() {
   this.element.onclick = null;
 };
 
 Picture.prototype.click = function(event) {
   event.preventDefault();
-  if(event.target.tagName === 'IMG') {
-    window.location.hash = '#photo/' + event.target.src.replace(document.location.origin + '/', '');
+  var element = event.target;
+  if(element.tagName === 'IMG') {
+    window.location.hash = '#photo/' + element.src.replace(document.location.origin + '/', '');
   }
 };
 
 Picture.prototype.error = function() {
-  if(this.element) {
-    this.element.classList.add('picture-load-failure');
-  }
+  this.loadingError(this.element);
 };
 
 Picture.prototype.load = function() {

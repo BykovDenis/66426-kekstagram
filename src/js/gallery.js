@@ -1,5 +1,8 @@
 'use strict';
 
+var BaseComponent = require('./base-component');
+var inherit = require('./inherit');
+
 // Отвечает за отрисовку фотографий
 var Gallery = function() {
 
@@ -8,9 +11,9 @@ var Gallery = function() {
   // Номер текущей фотографии в галерее
   this.activePicture = -1;
   // Ссылки на DOM элементы
-  this.galleryOverlay = document.querySelector('.gallery-overlay');
-  this.galleryOverlayClose = document.querySelector('.gallery-overlay-close');
-  this.galleryOverlayImage = document.querySelector('.gallery-overlay-image');
+  this.element = document.querySelector('.gallery-overlay');
+  this.elementClose = document.querySelector('.gallery-overlay-close');
+  this.elementImage = document.querySelector('.gallery-overlay-image');
 
   this.visible = this.visible.bind(this);
 
@@ -18,12 +21,19 @@ var Gallery = function() {
 
 };
 
-Gallery.prototype.galleryOverlayImageError = function() {
-  this.galleryOverlayImage.classList.add('picture-load-failure');
+Gallery.prototype = inherit(BaseComponent);
+
+
+Gallery.prototype.hashChange = function() {
+  window.addEventListener('hashchange', this.visible);
 };
 
-Gallery.prototype.galleryOverlayImageLoad = function() {
-  this.galleryOverlayImage.classList.remove('picture-load-failure');
+Gallery.prototype.elementImageError = function() {
+  this.loadingError(this.elementImage);
+};
+
+Gallery.prototype.elementImageLoad = function() {
+  this.elementImage.classList.remove('picture-load-failure');
 };
 
 Gallery.prototype.setPictures = function(data) {
@@ -46,18 +56,17 @@ Gallery.prototype.visible = function() {
   var match = window.location.hash.match(/#photo\/(\S+)/ig);
   var photo = match ? match[0].replace('#photo/', '') : '';
   if(match) {
-    this.galleryOverlay.classList.remove('invisible');
+    this.element.classList.remove('invisible');
     if (this.activePicture < 0) {
-      this.activePicture = 0;
-      this.galleryOverlayClose.onclick = this.hide.bind(this);
-      this.galleryOverlayImage.onclick = this.setActivePicture.bind(this);
-      this.galleryOverlayImage.onerror = this.galleryOverlayImageError.bind(this);
-      this.galleryOverlayImage.onload = this.galleryOverlayImageLoad.bind(this);
+      this.elementClose.onclick = this.hide.bind(this);
+      this.elementImage.onclick = this.setActivePicture.bind(this);
+      this.elementImage.onerror = this.elementImageError.bind(this);
+      this.elementImage.onload = this.elementImageLoad.bind(this);
       this.activePicture = this.getIndexPhotoByHash();
     }
     this.changePhoto(photo);
   } else {
-    this.galleryOverlay.classList.add('invisible');
+    this.element.classList.add('invisible');
   }
 };
 
@@ -66,16 +75,16 @@ Gallery.prototype.hide = function() {
     window.location.hash = '';
     this.activePicture = -1;
   }
-  this.galleryOverlayClose.onclick = null;
-  this.galleryOverlayImage.onclick = null;
-  this.galleryOverlayImage.onerror = null;
+  this.elementClose.onclick = null;
+  this.elementImage.onclick = null;
+  this.elementImage.onerror = null;
 };
 
 Gallery.prototype.changePhoto = function(photo) {
   if ((parseInt(photo, 10)).toString() === photo) {
-    this.galleryOverlayImage.src = this.pictures[photo].url;
+    this.elementImage.src = this.pictures[photo].url;
   } else {
-    this.galleryOverlayImage.src = photo.replace('#photo/', '');
+    this.elementImage.src = photo.replace('#photo/', '');
   }
 
   document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
@@ -88,10 +97,6 @@ Gallery.prototype.setActivePicture = function() {
     this.activePicture = 0;
   }
   window.location.hash = '#photo/' + this.pictures[this.activePicture].url.replace(document.location.origin + '/', '');
-};
-
-Gallery.prototype.hashChange = function() {
-  window.addEventListener('hashchange', this.visible);
 };
 
 module.exports = new Gallery();
