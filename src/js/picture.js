@@ -28,16 +28,12 @@ var Picture = function(card, index, element) {
   this.element.onclick = this.click.bind(this);
   this.img.width = this.IMG_SIDE;
   this.img.height = this.IMG_SIDE;
+  this.img.src = this.data.card.url;
 
   this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
-  this.imgSource(this.img, this.data.card.url);
 };
 
 Picture.prototype = inherit(BaseComponent);
-
-Picture.prototype.imgSource = function(el, url) {
-  BaseComponent.prototype.imgSource.call(this, el, url);
-};
 
 Picture.prototype.remove = function() {
   this.element.onclick = null;
@@ -45,15 +41,14 @@ Picture.prototype.remove = function() {
 
 Picture.prototype.click = function(event) {
   event.preventDefault();
-  if(event.target.tagName === 'IMG') {
-    window.location.hash = '#photo/' + event.target.src.replace(document.location.origin + '/', '');
+  var element = event.target;
+  if(element.tagName === 'IMG') {
+    window.location.hash = '#photo/' + element.src.replace(document.location.origin + '/', '');
   }
 };
 
 Picture.prototype.error = function() {
-  if(this.element) {
-    this.element.classList.add('picture-load-failure');
-  }
+  this.loadingError(this.element);
 };
 
 Picture.prototype.load = function() {
