@@ -29,13 +29,11 @@ Gallery.prototype.hashChange = function() {
 };
 
 Gallery.prototype.elementImageError = function() {
-  var element = this.elementImage.classList.add('picture-load-failure');
-  this.loadingError(element);
+  this.loadingError(this.elementImage);
 };
 
 Gallery.prototype.elementImageLoad = function() {
-  var element = this.elementImage.classList.remove('picture-load-failure');
-  this.loadingError(element);
+  this.elementImage.classList.remove('picture-load-failure');
 };
 
 Gallery.prototype.setPictures = function(data) {
