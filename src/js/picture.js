@@ -31,13 +31,11 @@ var Picture = function(card, index, element) {
   this.element.onclick = this.click.bind(this);
   this.img.width = this.IMG_SIDE;
   this.img.height = this.IMG_SIDE;
-<<<<<<< HEAD
   this.img.src = this.data.card.url;
-=======
   this.photoInfo = new PhotoInfo(this.data.card);
->>>>>>> module8-task4-alternative
 
   this.timeOutLoading = setTimeout(this.error.bind(this), this.IMAGE_LOAD_TIMEOUT);
+
 };
 
 Picture.prototype = inherit(BaseComponent);
@@ -49,22 +47,16 @@ Picture.prototype.remove = function() {
 Picture.prototype.click = function(event) {
   var elem = event.target;
   event.preventDefault();
-<<<<<<< HEAD
-  var element = event.target;
-  if(element.tagName === 'IMG') {
-    window.location.hash = '#photo/' + element.src.replace(document.location.origin + '/', '');
-=======
   if(elem.tagName === 'IMG') {
     window.location.hash = '#photo/' + elem.src.replace(document.location.origin + '/', '');
   }
   if (elem.classList.contains('picture-likes')) {
     this.photoInfo.setLikesCount(this.pictureLike);
->>>>>>> module8-task4-alternative
   }
 };
 
 Picture.prototype.error = function() {
-  this.loadingError(this.element);
+  this.loadingError();
 };
 
 Picture.prototype.load = function() {

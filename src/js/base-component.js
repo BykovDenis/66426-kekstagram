@@ -2,9 +2,9 @@
 
 var BaseComponent = function() {};
 
-BaseComponent.prototype.loadingError = function(element) {
-  if(element) {
-    element.classList.add('picture-load-failure');
+BaseComponent.prototype.loadingError = function() {
+  if(this.element) {
+    this.element.classList.add('picture-load-failure');
   }
 };
 

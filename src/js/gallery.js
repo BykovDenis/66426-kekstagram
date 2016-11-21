@@ -12,17 +12,10 @@ var Gallery = function() {
   // Номер текущей фотографии в галерее
   this.activePicture = -1;
   // Ссылки на DOM элементы
-<<<<<<< HEAD
-  this.element = document.querySelector('.gallery-overlay');
+  this.elementOverlay = document.querySelector('.gallery-overlay');
   this.elementClose = document.querySelector('.gallery-overlay-close');
-  this.elementImage = document.querySelector('.gallery-overlay-image');
-=======
-  this.galleryOverlay = document.querySelector('.gallery-overlay');
-  this.galleryOverlayClose = document.querySelector('.gallery-overlay-close');
-  this.galleryOverlayImage = document.querySelector('.gallery-overlay-image');
+  this.element = document.querySelector('.gallery-overlay-image');
   this.likesCount = document.querySelector('.likes-count');
->>>>>>> module8-task4-alternative
-
   this.visible = this.visible.bind(this);
 
   this.hashChange();
@@ -31,8 +24,7 @@ var Gallery = function() {
 
 Gallery.prototype = inherit(BaseComponent);
 
-Gallery.prototype.galleryOverlayClick = function() {
-  console.log(this);
+Gallery.prototype.elementImageClick = function() {
   this.photoInfo.setLikesCount(this.likesCount);
 };
 
@@ -41,11 +33,11 @@ Gallery.prototype.hashChange = function() {
 };
 
 Gallery.prototype.elementImageError = function() {
-  this.loadingError(this.elementImage);
+  this.loadingError(this.element);
 };
 
 Gallery.prototype.elementImageLoad = function() {
-  this.elementImage.classList.remove('picture-load-failure');
+  this.element.classList.remove('picture-load-failure');
 };
 
 Gallery.prototype.setPictures = function(data) {
@@ -68,53 +60,38 @@ Gallery.prototype.visible = function() {
   var match = window.location.hash.match(/#photo\/(\S+)/ig);
   var photo = match ? match[0].replace('#photo/', '') : '';
   if(match) {
-    this.element.classList.remove('invisible');
+    this.elementOverlay.classList.remove('invisible');
     if (this.activePicture < 0) {
-<<<<<<< HEAD
       this.elementClose.onclick = this.hide.bind(this);
-      this.elementImage.onclick = this.setActivePicture.bind(this);
-      this.elementImage.onerror = this.elementImageError.bind(this);
-      this.elementImage.onload = this.elementImageLoad.bind(this);
-=======
-      this.galleryOverlayClose.onclick = this.hide.bind(this);
-      this.galleryOverlayImage.onclick = this.setActivePicture.bind(this);
-      this.galleryOverlayImage.onerror = this.galleryOverlayImageError.bind(this);
-      this.galleryOverlayImage.onload = this.galleryOverlayImageLoad.bind(this);
-      this.likesCount.onclick = this.galleryOverlayClick.bind(this);
->>>>>>> module8-task4-alternative
+      this.element.onclick = this.setActivePicture.bind(this);
+      this.element.onerror = this.elementImageError.bind(this);
+      this.element.onload = this.elementImageLoad.bind(this);
+      this.likesCount.onclick = this.elementImageClick.bind(this);
       this.activePicture = this.getIndexPhotoByHash();
     }
     this.photoInfo = new PhotoInfo(this.pictures[this.activePicture]);
     this.changePhoto(photo);
   } else {
-    this.element.classList.add('invisible');
+    this.elementOverlay.classList.add('invisible');
   }
 };
 
 Gallery.prototype.hide = function() {
-<<<<<<< HEAD
   if(window.location.hash) {
     window.location.hash = '';
     this.activePicture = -1;
   }
   this.elementClose.onclick = null;
-  this.elementImage.onclick = null;
-  this.elementImage.onerror = null;
-=======
-  BaseComponent.prototype.clearURLHash();
-  this.activePicture = -1;
-  this.galleryOverlayClose.onclick = null;
-  this.galleryOverlayImage.onclick = null;
-  this.galleryOverlayImage.onerror = null;
-  this.galleryOverlayClick.onclick = null;
->>>>>>> module8-task4-alternative
+  this.element.onclick = null;
+  this.element.onerror = null;
+  this.likesCount.onclick = null;
 };
 
 Gallery.prototype.changePhoto = function(photo) {
   if ((parseInt(photo, 10)).toString() === photo) {
-    this.elementImage.src = this.pictures[photo].url;
+    this.element.src = this.pictures[photo].url;
   } else {
-    this.elementImage.src = photo.replace('#photo/', '');
+    this.element.src = photo.replace('#photo/', '');
   }
 
   document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
