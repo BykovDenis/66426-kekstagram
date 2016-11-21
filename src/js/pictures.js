@@ -4,6 +4,7 @@ var loadJSONData = require('./load');
 var Picture = require('./picture');
 var gallery = require('./gallery');
 var filtersData = require('../../bin/data/filter');
+var PhotoInfo = require('./photo-info');
 var arrFilters = ['filter-popular', 'filter-new', 'filter-discussed'];
 
 var THROTTLE_DELAY = 100;
@@ -11,8 +12,10 @@ var COUNT_PHOTO_BY_SCROLL = 12;
 
 var renderGallery = function(data) {
 
+  var photoInfo = new PhotoInfo(data);
+
   //фильтр изображений
-  var pictures = filtersData(data, params.filter);
+  var pictures = filtersData(photoInfo.data, params.filter);
   gallery.setPictures(pictures);
 
   // Ищем блок для вставки элементов с картинками
@@ -31,6 +34,7 @@ var renderGallery = function(data) {
 
     var objPicture = new Picture(card, index, pictureCard);
     picturesContainer.appendChild(objPicture.element);
+
 
   });
 

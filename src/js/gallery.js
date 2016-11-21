@@ -2,6 +2,7 @@
 
 var BaseComponent = require('./base-component');
 var inherit = require('./inherit');
+var PhotoInfo = require('./photo-info');
 
 // Отвечает за отрисовку фотографий
 var Gallery = function() {
@@ -11,9 +12,16 @@ var Gallery = function() {
   // Номер текущей фотографии в галерее
   this.activePicture = -1;
   // Ссылки на DOM элементы
+<<<<<<< HEAD
   this.element = document.querySelector('.gallery-overlay');
   this.elementClose = document.querySelector('.gallery-overlay-close');
   this.elementImage = document.querySelector('.gallery-overlay-image');
+=======
+  this.galleryOverlay = document.querySelector('.gallery-overlay');
+  this.galleryOverlayClose = document.querySelector('.gallery-overlay-close');
+  this.galleryOverlayImage = document.querySelector('.gallery-overlay-image');
+  this.likesCount = document.querySelector('.likes-count');
+>>>>>>> module8-task4-alternative
 
   this.visible = this.visible.bind(this);
 
@@ -23,6 +31,10 @@ var Gallery = function() {
 
 Gallery.prototype = inherit(BaseComponent);
 
+Gallery.prototype.galleryOverlayClick = function() {
+  console.log(this);
+  this.photoInfo.setLikesCount(this.likesCount);
+};
 
 Gallery.prototype.hashChange = function() {
   window.addEventListener('hashchange', this.visible);
@@ -58,12 +70,21 @@ Gallery.prototype.visible = function() {
   if(match) {
     this.element.classList.remove('invisible');
     if (this.activePicture < 0) {
+<<<<<<< HEAD
       this.elementClose.onclick = this.hide.bind(this);
       this.elementImage.onclick = this.setActivePicture.bind(this);
       this.elementImage.onerror = this.elementImageError.bind(this);
       this.elementImage.onload = this.elementImageLoad.bind(this);
+=======
+      this.galleryOverlayClose.onclick = this.hide.bind(this);
+      this.galleryOverlayImage.onclick = this.setActivePicture.bind(this);
+      this.galleryOverlayImage.onerror = this.galleryOverlayImageError.bind(this);
+      this.galleryOverlayImage.onload = this.galleryOverlayImageLoad.bind(this);
+      this.likesCount.onclick = this.galleryOverlayClick.bind(this);
+>>>>>>> module8-task4-alternative
       this.activePicture = this.getIndexPhotoByHash();
     }
+    this.photoInfo = new PhotoInfo(this.pictures[this.activePicture]);
     this.changePhoto(photo);
   } else {
     this.element.classList.add('invisible');
@@ -71,6 +92,7 @@ Gallery.prototype.visible = function() {
 };
 
 Gallery.prototype.hide = function() {
+<<<<<<< HEAD
   if(window.location.hash) {
     window.location.hash = '';
     this.activePicture = -1;
@@ -78,6 +100,14 @@ Gallery.prototype.hide = function() {
   this.elementClose.onclick = null;
   this.elementImage.onclick = null;
   this.elementImage.onerror = null;
+=======
+  BaseComponent.prototype.clearURLHash();
+  this.activePicture = -1;
+  this.galleryOverlayClose.onclick = null;
+  this.galleryOverlayImage.onclick = null;
+  this.galleryOverlayImage.onerror = null;
+  this.galleryOverlayClick.onclick = null;
+>>>>>>> module8-task4-alternative
 };
 
 Gallery.prototype.changePhoto = function(photo) {
