@@ -25,7 +25,7 @@ var Gallery = function() {
 Gallery.prototype = inherit(BaseComponent);
 
 Gallery.prototype.elementImageClick = function() {
-  this.photoInfo.setLikesCount(this.likesCount);
+  //this.photoInfo.setLikesCount();
 };
 
 Gallery.prototype.hashChange = function() {
@@ -69,7 +69,6 @@ Gallery.prototype.visible = function() {
       this.likesCount.onclick = this.elementImageClick.bind(this);
       this.activePicture = this.getIndexPhotoByHash();
     }
-    this.photoInfo = new PhotoInfo(this.pictures[this.activePicture]);
     this.changePhoto(photo);
   } else {
     this.elementOverlay.classList.add('invisible');
@@ -94,8 +93,22 @@ Gallery.prototype.changePhoto = function(photo) {
     this.element.src = photo.replace('#photo/', '');
   }
 
-  document.querySelector('.likes-count').innerText = this.pictures[this.activePicture].likes;
-  document.querySelector('.comments-count').innerText = this.pictures[this.activePicture].comments;
+  var pictureLikes = document.querySelector('.likes-count');
+  var pictureComments = document.querySelector('.comments-count');
+  pictureLikes.innerText = this.pictures[this.activePicture].likes;
+  pictureComments.innerText = this.pictures[this.activePicture].comments;
+
+  var photoInfo = new PhotoInfo();
+
+  photoInfo.pictureInfo[0] = {
+    likes: pictureLikes,
+    comments: pictureComments,
+    liked: false,
+    subscribe: photoInfo.subscribeEvents,
+  };
+
+  photoInfo.pictureInfo[0].subscribe();
+
 };
 
 Gallery.prototype.setActivePicture = function() {

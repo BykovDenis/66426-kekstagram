@@ -50,9 +50,6 @@ Picture.prototype.click = function(event) {
   if(elem.tagName === 'IMG') {
     window.location.hash = '#photo/' + elem.src.replace(document.location.origin + '/', '');
   }
-  if (elem.classList.contains('picture-likes')) {
-    this.photoInfo.setLikesCount(this.pictureLike);
-  }
 };
 
 Picture.prototype.error = function() {

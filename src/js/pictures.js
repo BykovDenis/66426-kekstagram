@@ -12,10 +12,10 @@ var COUNT_PHOTO_BY_SCROLL = 12;
 
 var renderGallery = function(data) {
 
-  var photoInfo = new PhotoInfo(data);
+  var photoInfo = new PhotoInfo();
 
   //фильтр изображений
-  var pictures = filtersData(photoInfo.data, params.filter);
+  var pictures = filtersData(data, params.filter);
   gallery.setPictures(pictures);
 
   // Ищем блок для вставки элементов с картинками
@@ -29,13 +29,24 @@ var renderGallery = function(data) {
 
     // строим карточки с фото и информацией
     var pictureCard = templateContainer.querySelector('.picture').cloneNode(true);
-    pictureCard.querySelector('.picture-likes').innerText = card.likes;
-    pictureCard.querySelector('.picture-comments').innerText = card.comments;
-
+    var pictureLikes = pictureCard.querySelector('.picture-likes');
+    var pictureComments = pictureCard.querySelector('.picture-comments');
+    pictureLikes.innerText = card.likes;
+    pictureComments.innerText = card.comments;
+    photoInfo.pictureInfo.push({
+      likes: pictureLikes,
+      comments: pictureComments,
+      liked: false,
+      subscribe: photoInfo.subscribeEvents,
+    });
     var objPicture = new Picture(card, index, pictureCard);
     picturesContainer.appendChild(objPicture.element);
 
 
+  });
+
+  photoInfo.pictureInfo.forEach(function(elem) {
+    elem.subscribe();
   });
 
   // Отображаем фильтры
